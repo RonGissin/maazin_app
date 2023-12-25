@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../date_formatter.dart';
 
 class DateTimePicker extends StatefulWidget {
   final String label;
@@ -74,7 +75,7 @@ class _DateTimePickerState extends State<DateTimePicker> {
           },
           child: Text(
             '${selectedTime.toLocal()}'.split(' ')[0] +
-                ' ${selectedTime.toLocal().hour.toString().padLeft(2, '0')}:${selectedTime.toLocal().minute.toString().padLeft(2, '0')}',
+                ' ${DateFormatter.formatTime(selectedTime)}',
           ),
         ),
       ],

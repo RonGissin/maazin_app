@@ -1,18 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:maazin_app/app_settings_provider.dart';
+import 'package:maazin_app/guard_list_generator.dart';
+import 'package:maazin_app/models/assigned_team_member.dart';
 import '../models/team_member.dart';
-import '../widgets/generated_lists_widget.dart';
+import '../widgets/guard_groups_list.dart';
 import 'package:provider/provider.dart';
 import '../team_provider.dart'; // Import the TeamProvider class
 import '../widgets/datetime_picker.dart';
+import '../date_formatter.dart';
 
 class GeneratedListsScreen extends StatefulWidget {
   @override
   _GeneratedListsScreenState createState() => _GeneratedListsScreenState();
 }
 
-class _GeneratedListsScreenState extends State<GeneratedListsScreen> {
-  List<String> generatedLists = [];
+class _GeneratedListsScreenState extends State<GeneratedListsScreen> 
+  with AutomaticKeepAliveClientMixin {
+  List<List<AssignedTeamMember>> guardGroups = [];
   List<TeamMember> teamMembers = [];
+  GuardListGenerator generator = GuardListGenerator();
+  int numberOfConcurrentGuards = 1;
+
+  @override
+  bool get wantKeepAlive => true;
 
   void _showGenerateListModal(BuildContext context) {
     showModalBottomSheet(
@@ -58,7 +68,9 @@ Widget _buildGenerateListModal(BuildContext context) {
         ElevatedButton(
           onPressed: () {
             // Perform list generation logic here
-            _generateList(selectedStartTime, selectedEndTime);
+            setState(() {
+              guardGroups = generator.generateGuardGroups(teamMembers, numberOfConcurrentGuards, selectedStartTime, selectedEndTime);
+            });
             Navigator.pop(context); // Close the modal
           },
           child: Text('Generate'),
@@ -120,53 +132,28 @@ Widget _buildDateTimePicker({
         },
         child: Text(
           '${selectedTime.toLocal()}'.split(' ')[0] +
-              ' ${selectedTime.toLocal().hour.toString().padLeft(2, '0')}:${selectedTime.toLocal().minute.toString().padLeft(2, '0')}',
+              ' ${DateFormatter.formatTime(selectedTime)}',
         ),
       ),
     ],
   );
 }
 
-
-
-
-
-void _generateList(DateTime startTime, DateTime endTime) {
-    // Implement logic to generate the list based on the selected start and end times
-    // ...
-
-    // Dummy logic: Assign each person equal time for guarding
-    List<String> newList = [];
-    int numberOfMembers = teamMembers.length;
-    Duration totalTime = endTime.difference(startTime);
-    Duration timePerPerson = totalTime ~/ numberOfMembers;
-
-    for (int i = 0; i < numberOfMembers; i++) {
-      DateTime start = startTime.add(timePerPerson * i);
-      DateTime end = start.add(timePerPerson);
-      String entry = '${teamMembers[i].name}: $start - $end';
-      newList.add(entry);
-    }
-
-    setState(() {
-      generatedLists = newList;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+@override
+Widget build(BuildContext context) {
     teamMembers = Provider.of<TeamProvider>(context).teamMembers;
+    numberOfConcurrentGuards = Provider.of<AppSettingsProvider>(context).settings.numberOfConcurrentGuards;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Generated Lists'),
+        title: Text('My Guard List'),
       ),
-      body: GeneratedListsWidget(generatedLists: generatedLists),
+      body: GuardGroupsList(guardGroups: guardGroups),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showGenerateListModal(context);
         },
-        child: Icon(Icons.add),
+        child: Icon(Icons.edit),
       ),
     );
   }

@@ -32,9 +32,9 @@ class _DateTimePickerState extends State<DateTimePicker> {
       children: [
         Text(
           widget.label,
-          style: TextStyle(fontSize: 16.0),
+          style: const TextStyle(fontSize: 16.0),
         ),
-        SizedBox(height: 8.0),
+        const SizedBox(height: 8.0),
         ElevatedButton(
           onPressed: () async {
             DateTime? pickedDateTime = await showDatePicker(
@@ -74,8 +74,7 @@ class _DateTimePickerState extends State<DateTimePicker> {
             }
           },
           child: Text(
-            '${selectedTime.toLocal()}'.split(' ')[0] +
-                ' ${DateFormatter.formatTime(selectedTime)}',
+            '${'${selectedTime.toLocal()}'.split(' ')[0]} ${DateFormatter.formatTime(selectedTime)}',
           ),
         ),
       ],

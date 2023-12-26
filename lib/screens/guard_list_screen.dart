@@ -6,16 +6,17 @@ import '../widgets/guard_groups_list.dart';
 import 'package:provider/provider.dart';
 import '../team_provider.dart'; // Import the TeamProvider class
 import '../widgets/datetime_picker.dart';
-import '../date_formatter.dart';
 import '../widgets/number_of_guards_input.dart';
 import 'package:flutter/services.dart';
 
-class GeneratedListsScreen extends StatefulWidget {
+class GuardListScreen extends StatefulWidget {
+  const GuardListScreen({super.key});
+
   @override
-  _GeneratedListsScreenState createState() => _GeneratedListsScreenState();
+  _GuardListScreenState createState() => _GuardListScreenState();
 }
 
-class _GeneratedListsScreenState extends State<GeneratedListsScreen> 
+class _GuardListScreenState extends State<GuardListScreen> 
   with AutomaticKeepAliveClientMixin {
   List<List<AssignedTeamMember>> guardGroups = [];
   List<TeamMember> teamMembers = [];
@@ -40,15 +41,15 @@ Widget _buildGenerateListModal(BuildContext context) {
   DateTime selectedEndTime = DateTime.now();
 
   return Container(
-    padding: EdgeInsets.all(16.0),
+    padding: const EdgeInsets.all(16.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Select Start Time and End Time',
           style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
         ),
-        SizedBox(height: 16.0),
+        const SizedBox(height: 16.0),
         DateTimePicker(
           label: 'Start Time',
           initialTime: selectedStartTime,
@@ -58,7 +59,7 @@ Widget _buildGenerateListModal(BuildContext context) {
             });
           },
         ),
-        SizedBox(height: 16.0),
+        const SizedBox(height: 16.0),
         DateTimePicker(
           label: 'End Time',
           initialTime: selectedEndTime,
@@ -68,7 +69,7 @@ Widget _buildGenerateListModal(BuildContext context) {
             });
           },
         ),
-         SizedBox(height: 16.0),
+         const SizedBox(height: 16.0),
         NumberOfGuardsInput(
           onChanged: (value) {
             setState(() {
@@ -76,7 +77,7 @@ Widget _buildGenerateListModal(BuildContext context) {
             });
           },
         ),
-        SizedBox(height: 16.0),
+        const SizedBox(height: 16.0),
         ElevatedButton(
           onPressed: () {
             // Perform list generation logic here
@@ -90,69 +91,10 @@ Widget _buildGenerateListModal(BuildContext context) {
             });
             Navigator.pop(context); // Close the modal
           },
-          child: Text('Generate'),
+          child: const Text('Generate'),
         ),
       ],
     ),
-  );
-}
-
-Widget _buildDateTimePicker({
-  required String label,
-  required DateTime selectedTime,
-  required ValueChanged<DateTime> onTimeChanged,
-}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        label,
-        style: TextStyle(fontSize: 16.0),
-      ),
-      SizedBox(height: 8.0),
-      ElevatedButton(
-        onPressed: () async {
-          DateTime? pickedDateTime = await showDatePicker(
-            context: context,
-            initialDate: selectedTime,
-            firstDate: DateTime(2000),
-            lastDate: DateTime(2101),
-          );
-
-          if (pickedDateTime != null) {
-            TimeOfDay? pickedHourMinute = await showTimePicker(
-              context: context,
-              initialTime: TimeOfDay.fromDateTime(selectedTime),
-              builder: (BuildContext context, Widget? child) {
-                return MediaQuery(
-                  data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-                  child: child!,
-                );
-              },
-            );
-
-            if (pickedHourMinute != null) {
-              DateTime selectedDateTime = DateTime(
-                pickedDateTime.year,
-                pickedDateTime.month,
-                pickedDateTime.day,
-                pickedHourMinute.hour,
-                pickedHourMinute.minute,
-              );
-
-              // Update the selectedTime within the function
-              selectedTime = selectedDateTime;
-
-              onTimeChanged(selectedDateTime);
-            }
-          }
-        },
-        child: Text(
-          '${selectedTime.toLocal()}'.split(' ')[0] +
-              ' ${DateFormatter.formatTime(selectedTime)}',
-        ),
-      ),
-    ],
   );
 }
 
@@ -167,12 +109,14 @@ void _showSnackBar(BuildContext context, String message) {
 
 @override
 Widget build(BuildContext context) {
+    super.build(context);
+    
     teamMembers = Provider.of<TeamProvider>(context).teamMembers;
     guardGroupsList = GuardGroupsList(guardGroups: guardGroups);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Guard List'),
+        title: const Text('My Guard List'),
       ),
       body: guardGroupsList,
       //floatingActionButton: FloatingActionButton(
@@ -192,16 +136,16 @@ Widget build(BuildContext context) {
               Clipboard.setData(ClipboardData(text: guardGroupsList.getReadableList()));
               _showSnackBar(context, 'Copied!');
             },
-            child: Icon(Icons.copy),
+            child: const Icon(Icons.copy),
           ),),
           
           FloatingActionButton(
             onPressed: () {
               _showGenerateListModal(context);
             },
-            child: Icon(Icons.edit)
+            child: const Icon(Icons.edit)
           ),
-          SizedBox(height: 16.0),
+          const SizedBox(height: 16.0),
         ],
       ),
     );

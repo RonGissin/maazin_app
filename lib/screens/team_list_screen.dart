@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/team_member.dart';
-import '../widgets/personnel_list.dart';
+import '../widgets/team_list.dart';
 import '../team_provider.dart';
 
-class ManagePersonnelScreen extends StatelessWidget {
+class TeamListScreen extends StatelessWidget {
+  const TeamListScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Manage Personnel'),
+        title: const Text('Manage Team Members'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -20,11 +21,11 @@ class ManagePersonnelScreen extends StatelessWidget {
               onPressed: () {
                 _showAddTeamMemberDialog(context);
               },
-              icon: Icon(Icons.add),
-              label: Text('Add Team Member'),
+              icon: const Icon(Icons.add),
+              label: const Text('Add Team Member'),
             ),
-            SizedBox(height: 16.0),
-            PersonnelList(),
+            const SizedBox(height: 16.0),
+            const TeamList(),
           ],
         ),
       ),
@@ -38,17 +39,17 @@ class ManagePersonnelScreen extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Add Team Member'),
+          title: const Text('Add Team Member'),
           content: TextField(
             controller: controller,
-            decoration: InputDecoration(labelText: 'Name'),
+            decoration: const InputDecoration(labelText: 'Name'),
           ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
@@ -59,7 +60,7 @@ class ManagePersonnelScreen extends StatelessWidget {
                   Navigator.pop(context);
                 }
               },
-              child: Text('Add'),
+              child: const Text('Add'),
             ),
           ],
         );

@@ -17,7 +17,7 @@ class _NumberOfGuardsInputState extends State<NumberOfGuardsInput> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Number of Guards',
           style: TextStyle(fontSize: 16.0),
         ),
@@ -33,7 +33,7 @@ class _NumberOfGuardsInputState extends State<NumberOfGuardsInput> {
                 });
               },
             ),
-            Text('1'),
+            const Text('1'),
             Radio(
               value: 2,
               groupValue: selectedValue,
@@ -44,7 +44,7 @@ class _NumberOfGuardsInputState extends State<NumberOfGuardsInput> {
                 });
               },
             ),
-            Text('2'),
+            const Text('2'),
             Radio(
               value: 3,
               groupValue: selectedValue,
@@ -55,7 +55,7 @@ class _NumberOfGuardsInputState extends State<NumberOfGuardsInput> {
                 });
               },
             ),
-            Text('3'),
+            const Text('3'),
           ],
         ),
       ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'screens/manage_personnel.dart';
-import 'screens/generated_lists.dart';
+import 'screens/team_list_screen.dart';
+import 'screens/guard_list_screen.dart';
 import 'team_provider.dart';
 
 void main() {
@@ -10,11 +10,11 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => TeamProvider()),
       ],
-    child: MyApp())
+    child: MaazinApp())
   );
 }
 
-class MyApp extends StatelessWidget {
+class MaazinApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Access the TeamProvider and call the init method
@@ -25,12 +25,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: MyHomePage(),
+      home: MaazinHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MaazinHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -40,15 +40,15 @@ class MyHomePage extends StatelessWidget {
           title: Text('Maazin'),
           bottom: TabBar(
             tabs: [
-              Tab(text: 'Manage Personnel'),
-              Tab(text: 'Generate a List'),
+              Tab(text: 'Your Team'),
+              Tab(text: 'Guard List'),
             ],
           ),
         ),
         body: TabBarView(
           children: [
-            ManagePersonnelScreen(),
-            GeneratedListsScreen(),
+            TeamListScreen(),
+            GuardListScreen(),
           ],
         ),
       ),

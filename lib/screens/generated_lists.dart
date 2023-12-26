@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:maazin_app/app_settings_provider.dart';
 import 'package:maazin_app/guard_list_generator.dart';
 import 'package:maazin_app/models/assigned_team_member.dart';
 import '../models/team_member.dart';
@@ -8,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../team_provider.dart'; // Import the TeamProvider class
 import '../widgets/datetime_picker.dart';
 import '../date_formatter.dart';
+import '../widgets/number_of_guards_input.dart';
 
 class GeneratedListsScreen extends StatefulWidget {
   @override
@@ -54,7 +54,8 @@ Widget _buildGenerateListModal(BuildContext context) {
             setState(() {
               selectedStartTime = time;
             });
-        },),
+          },
+        ),
         SizedBox(height: 16.0),
         DateTimePicker(
           label: 'End Time',
@@ -63,13 +64,27 @@ Widget _buildGenerateListModal(BuildContext context) {
             setState(() {
               selectedEndTime = time;
             });
-        },),
+          },
+        ),
+         SizedBox(height: 16.0),
+        NumberOfGuardsInput(
+          onChanged: (value) {
+            setState(() {
+              numberOfConcurrentGuards = value;
+            });
+          },
+        ),
         SizedBox(height: 16.0),
         ElevatedButton(
           onPressed: () {
             // Perform list generation logic here
             setState(() {
-              guardGroups = generator.generateGuardGroups(teamMembers, numberOfConcurrentGuards, selectedStartTime, selectedEndTime);
+              guardGroups = generator.generateGuardGroups(
+                teamMembers,
+                numberOfConcurrentGuards,
+                selectedStartTime,
+                selectedEndTime,
+              );
             });
             Navigator.pop(context); // Close the modal
           },
@@ -142,7 +157,6 @@ Widget _buildDateTimePicker({
 @override
 Widget build(BuildContext context) {
     teamMembers = Provider.of<TeamProvider>(context).teamMembers;
-    numberOfConcurrentGuards = Provider.of<AppSettingsProvider>(context).settings.numberOfConcurrentGuards;
 
     return Scaffold(
       appBar: AppBar(

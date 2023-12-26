@@ -8,6 +8,7 @@ import '../team_provider.dart'; // Import the TeamProvider class
 import '../widgets/datetime_picker.dart';
 import '../date_formatter.dart';
 import '../widgets/number_of_guards_input.dart';
+import 'package:flutter/services.dart';
 
 class GeneratedListsScreen extends StatefulWidget {
   @override
@@ -20,6 +21,7 @@ class _GeneratedListsScreenState extends State<GeneratedListsScreen>
   List<TeamMember> teamMembers = [];
   GuardListGenerator generator = GuardListGenerator();
   int numberOfConcurrentGuards = 1;
+  late GuardGroupsList guardGroupsList;
 
   @override
   bool get wantKeepAlive => true;
@@ -154,20 +156,53 @@ Widget _buildDateTimePicker({
   );
 }
 
+void _showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
 @override
 Widget build(BuildContext context) {
     teamMembers = Provider.of<TeamProvider>(context).teamMembers;
+    guardGroupsList = GuardGroupsList(guardGroups: guardGroups);
 
     return Scaffold(
       appBar: AppBar(
         title: Text('My Guard List'),
       ),
-      body: GuardGroupsList(guardGroups: guardGroups),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _showGenerateListModal(context);
-        },
-        child: Icon(Icons.edit),
+      body: guardGroupsList,
+      //floatingActionButton: FloatingActionButton(
+      //  onPressed: () {
+      //    _showGenerateListModal(context);
+      //  },
+      //  child: Icon(Icons.edit),
+      //),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: FloatingActionButton(
+            onPressed: () {
+              // Handle second FAB press
+              Clipboard.setData(ClipboardData(text: guardGroupsList.getReadableList()));
+              _showSnackBar(context, 'Copied!');
+            },
+            child: Icon(Icons.copy),
+          ),),
+          
+          FloatingActionButton(
+            onPressed: () {
+              _showGenerateListModal(context);
+            },
+            child: Icon(Icons.edit)
+          ),
+          SizedBox(height: 16.0),
+        ],
       ),
     );
   }

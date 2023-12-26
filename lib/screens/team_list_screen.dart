@@ -8,9 +8,14 @@ class TeamListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color secondaryColor = Theme.of(context).colorScheme.secondary;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Manage Team Members'),
+        title: Text(
+          'Manage Team Members',
+          style: TextStyle(color: secondaryColor)
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

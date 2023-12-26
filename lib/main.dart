@@ -23,7 +23,7 @@ class MaazinApp extends StatelessWidget {
     return MaterialApp(
       title: 'Maazin',
       theme: ThemeData(
-        primarySwatch: Colors.green,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
       ),
       home: MaazinHomePage(),
     );
@@ -33,15 +33,57 @@ class MaazinApp extends StatelessWidget {
 class MaazinHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Color secondaryColor = Theme.of(context).colorScheme.secondary;
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Maazin'),
+          title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.group_outlined, // Replace with your desired icon
+              color: secondaryColor,
+              size: 24.0,
+            ),
+            SizedBox(width: 5.0), // Add spacing between icon and text
+            Text(
+              'Maazin',
+              style: TextStyle(
+                color: secondaryColor,
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+          ),
           bottom: TabBar(
             tabs: [
-              Tab(text: 'Your Team'),
-              Tab(text: 'Guard List'),
+              Tab(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.group, // Replace with your desired icon
+                      color: secondaryColor,
+                    ),
+                    SizedBox(width: 5.0), // Add spacing between icon and text
+                    Text('Your Team'),
+                  ],
+              )),
+              Tab(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.security, // Replace with your desired icon
+                      color: secondaryColor,
+                    ),
+                    SizedBox(width: 5.0), // Add spacing between icon and text
+                    Text('Guard List'),
+                  ],
+              )),
             ],
           ),
         ),

@@ -101,8 +101,14 @@ Widget _buildGenerateListModal(BuildContext context) {
 void _showSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message),
+        content: Padding(
+          padding: const EdgeInsets.only(bottom: 25.0), // Adjust bottom padding as needed
+          child: Center(child: Text(message)),
+        ),
         duration: Duration(seconds: 2),
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        behavior: SnackBarBehavior.fixed,
+        elevation: 30,
       ),
     );
   }
@@ -111,12 +117,16 @@ void _showSnackBar(BuildContext context, String message) {
 Widget build(BuildContext context) {
     super.build(context);
     
+    Color secondaryColor = Theme.of(context).colorScheme.secondary;
     teamMembers = Provider.of<TeamProvider>(context).teamMembers;
     guardGroupsList = GuardGroupsList(guardGroups: guardGroups);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Guard List'),
+        title: Text(
+          'Manage Team Members',
+          style: TextStyle(color: secondaryColor)
+        ),
       ),
       body: guardGroupsList,
       //floatingActionButton: FloatingActionButton(

@@ -16,7 +16,16 @@ class GuardGroupsList extends StatelessWidget {
       itemBuilder: (context, index) {
         return Card(
           child: ListTile(
-          title: Text('${guardGroups[index].map((e) => '${e.name} ').join(',')}${DateFormatter.formatTime(guardGroups[index][0].startTime)} - ${DateFormatter.formatTime(guardGroups[index][0].endTime)}'),
+          title: Row(
+            children: [
+              ...guardGroups[index].map((e) => 
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Card(child: Text(e.name)),
+                )),
+              Card(child: Text('${DateFormatter.formatTime(guardGroups[index][0].startTime)} - ${DateFormatter.formatTime(guardGroups[index][0].endTime)}'))
+            ],
+          )
           // Add more details or actions as needed
         ));
       },
@@ -28,8 +37,6 @@ class GuardGroupsList extends StatelessWidget {
     formattedList.writeln('**Guard List**'); // WhatsApp markdown for bold text
 
     for (int i = 0; i < guardGroups.length; i++) {
-      formattedList.writeln('Group ${i + 1}:');
-
       for (int j = 0; j < guardGroups[i].length; j++) {
         formattedList.writeln(
           '- ${guardGroups[i][j].name} - ${DateFormatter.formatTime(guardGroups[i][j].startTime)} to ${DateFormatter.formatTime(guardGroups[i][j].endTime)}',

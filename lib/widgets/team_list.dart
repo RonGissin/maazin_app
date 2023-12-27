@@ -10,7 +10,7 @@ class TeamList extends StatelessWidget {
   Widget build(BuildContext context) {
     // Use Provider to listen to changes in the team members
     List<TeamMember> teamMembers = Provider.of<TeamProvider>(context).teamMembers;
-
+    
     return Expanded(
       child: ListView.builder(
         itemCount: teamMembers.length,

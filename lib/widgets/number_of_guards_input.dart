@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 
 class NumberOfGuardsInput extends StatefulWidget {
   final ValueChanged<int> onChanged;
+  int initialState = 1;
 
-  NumberOfGuardsInput({required this.onChanged});
+  NumberOfGuardsInput({required this.onChanged, required this.initialState});
 
   @override
-  _NumberOfGuardsInputState createState() => _NumberOfGuardsInputState();
+  _NumberOfGuardsInputState createState() => _NumberOfGuardsInputState(initialState);
 }
 
 class _NumberOfGuardsInputState extends State<NumberOfGuardsInput> {
+  _NumberOfGuardsInputState(int intitialState)
+  {
+    selectedValue = intitialState;
+  }
+
   int selectedValue = 1;
 
   @override

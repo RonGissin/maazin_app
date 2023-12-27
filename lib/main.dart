@@ -24,11 +24,13 @@ class MaazinApp extends StatelessWidget {
       title: 'Maazin',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
+        fontFamily: "BlackOpsOne"
       ),
       home: MaazinHomePage(),
     );
   }
 }
+
 
 class MaazinHomePage extends StatelessWidget {
   @override
@@ -45,16 +47,14 @@ class MaazinHomePage extends StatelessWidget {
             Icon(
               Icons.group_outlined, // Replace with your desired icon
               color: secondaryColor,
-              size: 24.0,
+              size: 30.0,
             ),
             SizedBox(width: 5.0), // Add spacing between icon and text
             Text(
               'Maazin',
               style: TextStyle(
                 color: secondaryColor,
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-              ),
+               fontSize: 30),
             ),
           ],
           ),
@@ -69,7 +69,7 @@ class MaazinHomePage extends StatelessWidget {
                       color: secondaryColor,
                     ),
                     SizedBox(width: 5.0), // Add spacing between icon and text
-                    Text('Your Team'),
+                    Text('My Team'),
                   ],
               )),
               Tab(

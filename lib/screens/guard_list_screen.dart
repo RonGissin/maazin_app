@@ -23,24 +23,24 @@ class _GuardListScreenState extends State<GuardListScreen>
   GuardListGenerator generator = GuardListGenerator();
   int numberOfConcurrentGuards = 1;
   late GuardGroupsList guardGroupsList;
+  DateTime selectedStartTime = DateTime.now();
+  DateTime selectedEndTime = DateTime.now();
 
   @override
   bool get wantKeepAlive => true;
 
-  void _showGenerateListModal(BuildContext context) {
+  void _showGenerateListModal(BuildContext context, DateTime previousStartTime, DateTime previousEndTime) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return _buildGenerateListModal(context);
+        return _buildGenerateListModal(context, previousStartTime, previousEndTime);
       },
     );
   }
 
-Widget _buildGenerateListModal(BuildContext context) {
-  DateTime selectedStartTime = DateTime.now();
-  DateTime selectedEndTime = DateTime.now();
+Widget _buildGenerateListModal(BuildContext context, DateTime previousStartTime, DateTime previousEndTime) {
 
-  return Container(
+    return Container(
     padding: const EdgeInsets.all(16.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,7 +52,7 @@ Widget _buildGenerateListModal(BuildContext context) {
         const SizedBox(height: 16.0),
         DateTimePicker(
           label: 'Start Time',
-          initialTime: selectedStartTime,
+          initialTime: previousStartTime,
           onTimeChanged: (DateTime time) {
             setState(() {
               selectedStartTime = time;
@@ -62,7 +62,7 @@ Widget _buildGenerateListModal(BuildContext context) {
         const SizedBox(height: 16.0),
         DateTimePicker(
           label: 'End Time',
-          initialTime: selectedEndTime,
+          initialTime: previousEndTime,
           onTimeChanged: (DateTime time) {
             setState(() {
               selectedEndTime = time;
@@ -71,6 +71,7 @@ Widget _buildGenerateListModal(BuildContext context) {
         ),
          const SizedBox(height: 16.0),
         NumberOfGuardsInput(
+          initialState: numberOfConcurrentGuards,
           onChanged: (value) {
             setState(() {
               numberOfConcurrentGuards = value;
@@ -124,7 +125,7 @@ Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Manage Team Members',
+          'Guard List',
           style: TextStyle(color: secondaryColor)
         ),
       ),
@@ -151,7 +152,7 @@ Widget build(BuildContext context) {
           
           FloatingActionButton(
             onPressed: () {
-              _showGenerateListModal(context);
+              _showGenerateListModal(context, _calculatePresentionTime(selectedStartTime), _calculatePresentionTime(selectedEndTime));
             },
             child: const Icon(Icons.edit)
           ),
@@ -159,5 +160,11 @@ Widget build(BuildContext context) {
         ],
       ),
     );
+  }
+  
+  DateTime _calculatePresentionTime(DateTime startTime) 
+  {
+    return startTime.difference(DateTime.now()) < Duration.zero ? DateTime.now():startTime;
+
   }
 }

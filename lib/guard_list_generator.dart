@@ -3,7 +3,12 @@ import 'package:maazin_app/models/team_member.dart';
 import 'dart:math';
 
 class GuardListGenerator {
-  List<List<AssignedTeamMember>> generateGuardGroups(List<TeamMember> teamMembers, int groupSize, DateTime startTime, DateTime endTime) {
+  List<List<AssignedTeamMember>> generateGuardGroups(
+    List<TeamMember> teamMembers, 
+    int groupSize, 
+    DateTime startTime,
+    DateTime endTime, 
+    int? guardTime) {
     // Shuffle the teamMembers list randomly
     teamMembers.shuffle();
 
@@ -11,7 +16,9 @@ class GuardListGenerator {
     int numGroups = (teamMembers.length / groupSize).ceil();
 
     // Calculate the total duration for guard time
-    Duration totalDuration = endTime.difference(startTime);
+    Duration totalDuration =  guardTime != null ?
+      Duration(minutes: guardTime * numGroups) :
+      endTime.difference(startTime);
 
     // Calculate the duration for each group
     Duration groupDuration = Duration(milliseconds: totalDuration.inMilliseconds ~/ numGroups);

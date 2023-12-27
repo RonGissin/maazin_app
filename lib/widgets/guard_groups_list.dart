@@ -64,11 +64,14 @@ class GuardGroupsList extends StatelessWidget {
     formattedList.writeln('**Guard List**'); // WhatsApp markdown for bold text
 
     for (int i = 0; i < guardGroups.length; i++) {
+      formattedList.write('- ');
       for (int j = 0; j < guardGroups[i].length; j++) {
-        formattedList.writeln(
-          '- ${guardGroups[i][j].name} - ${DateFormatter.formatTime(guardGroups[i][j].startTime)} to ${DateFormatter.formatTime(guardGroups[i][j].endTime)}',
-        );
+        formattedList.write('${guardGroups[i][j].name}');
+        if (j < guardGroups[i].length - 1) {
+          formattedList.write(', ');
+        }
       }
+      formattedList.write(' - ${DateFormatter.formatTime(guardGroups[i][0].startTime)} to ${DateFormatter.formatTime(guardGroups[i][0].endTime)}\n');
     }
 
     return formattedList.toString();

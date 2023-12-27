@@ -26,6 +26,8 @@ class _GuardListScreenState extends State<GuardListScreen>
   DateTime selectedStartTime = DateTime.now();
   DateTime selectedEndTime = DateTime.now();
   bool isInvalidTime = false;
+  int? intGuardTime ;
+  TextEditingController doubleGuardTimeController = TextEditingController();
 
   @override
   bool get wantKeepAlive => true;
@@ -90,6 +92,20 @@ Widget _buildGenerateListModal(BuildContext context, DateTime previousStartTime,
           },
         ),
         const SizedBox(height: 16.0),
+            TextField(
+              controller: doubleGuardTimeController,
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                // Update the stored value whenever the TextField changes
+                setState(() {
+                  intGuardTime = int.tryParse(value);
+                });
+              },
+              decoration: InputDecoration(
+                labelText: 'Guard Time in minutes - optional',
+                hintText: 'Enter guard time in minutes',
+              ),
+            ),
         ElevatedButton(
           onPressed: () {
             setState(() {
@@ -107,6 +123,8 @@ Widget _buildGenerateListModal(BuildContext context, DateTime previousStartTime,
                 numberOfConcurrentGuards,
                 selectedStartTime,
                 selectedEndTime,
+                intGuardTime
+                
               );
             });
             Navigator.pop(context); // Close the modal

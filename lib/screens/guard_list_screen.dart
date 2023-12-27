@@ -25,6 +25,7 @@ class _GuardListScreenState extends State<GuardListScreen>
   late GuardGroupsList guardGroupsList;
   DateTime selectedStartTime = DateTime.now();
   DateTime selectedEndTime = DateTime.now();
+  bool isInvalidTime = false;
 
   @override
   bool get wantKeepAlive => true;
@@ -41,7 +42,7 @@ class _GuardListScreenState extends State<GuardListScreen>
 Widget _buildGenerateListModal(BuildContext context, DateTime previousStartTime, DateTime previousEndTime) {
 
     return Container(
-    padding: const EdgeInsets.all(16.0),
+    padding: const EdgeInsets.all(16.0),     
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -64,12 +65,22 @@ Widget _buildGenerateListModal(BuildContext context, DateTime previousStartTime,
           label: 'End Time',
           initialTime: previousEndTime,
           onTimeChanged: (DateTime time) {
-            setState(() {
+            setState(() {             
               selectedEndTime = time;
+
+              isInvalidTime = selectedStartTime.isAfter(selectedEndTime);
             });
           },
         ),
-         const SizedBox(height: 16.0),
+        const SizedBox(height: 16.0),
+        Visibility(
+          visible: isInvalidTime,
+          child: Text(
+            'End time cannot be earlier than start time',
+            style: TextStyle(color: Colors.red),
+          ),
+        ),
+        const SizedBox(height: 16.0),
         NumberOfGuardsInput(
           initialState: numberOfConcurrentGuards,
           onChanged: (value) {
@@ -81,6 +92,14 @@ Widget _buildGenerateListModal(BuildContext context, DateTime previousStartTime,
         const SizedBox(height: 16.0),
         ElevatedButton(
           onPressed: () {
+            setState(() {
+            isInvalidTime = selectedStartTime.isAfter(selectedEndTime);
+            });
+             // Perform validation
+            if (isInvalidTime) {
+              return;
+            }
+
             // Perform list generation logic here
             setState(() {
               guardGroups = generator.generateGuardGroups(
@@ -130,12 +149,6 @@ Widget build(BuildContext context) {
         ),
       ),
       body: guardGroupsList,
-      //floatingActionButton: FloatingActionButton(
-      //  onPressed: () {
-      //    _showGenerateListModal(context);
-      //  },
-      //  child: Icon(Icons.edit),
-      //),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -165,6 +178,5 @@ Widget build(BuildContext context) {
   DateTime _calculatePresentionTime(DateTime startTime) 
   {
     return startTime.difference(DateTime.now()) < Duration.zero ? DateTime.now():startTime;
-
   }
 }

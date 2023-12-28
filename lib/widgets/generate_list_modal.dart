@@ -6,12 +6,16 @@ class GenerateListModal extends StatefulWidget {
   final DateTime previousStartTime;
   final DateTime previousEndTime;
   final Function(DateTime, DateTime, int?, int, bool) onGenerateList;
+  final void Function(DateTime) onSetStartTime;
+  final void Function(DateTime) onSetEndTime;
 
   const GenerateListModal({
     Key? key,
     required this.previousStartTime,
     required this.previousEndTime,
     required this.onGenerateList,
+    required this.onSetStartTime,
+    required this.onSetEndTime
   }) : super(key: key);
 
   @override
@@ -57,6 +61,8 @@ class _GenerateListModalState extends State<GenerateListModal> {
               setState(() {
                 selectedStartTime = time;
               });
+
+              widget.onSetStartTime(time);
             },
           ),
           const SizedBox(height: 20.0),
@@ -68,6 +74,8 @@ class _GenerateListModalState extends State<GenerateListModal> {
                 selectedEndTime = time;
                 isInvalidTime = selectedStartTime.isAfter(selectedEndTime);
               });
+              
+              widget.onSetEndTime(time);
             },
           ),
           const SizedBox(height: 20.0),

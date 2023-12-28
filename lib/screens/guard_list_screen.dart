@@ -33,7 +33,11 @@ class _GuardListScreenState extends State<GuardListScreen>
   bool get wantKeepAlive => true;
 
   void _showGenerateListModal(
-      BuildContext context, DateTime previousStartTime, DateTime previousEndTime) {
+      BuildContext context,
+      DateTime previousStartTime,
+      DateTime previousEndTime,
+      void Function(DateTime) onSetStartTime,
+      void Function(DateTime) onSetEndTime) {
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -43,6 +47,8 @@ class _GuardListScreenState extends State<GuardListScreen>
             onGenerateList: _generateList, // Pass the callback function
             previousStartTime: previousStartTime,
             previousEndTime: previousEndTime,
+            onSetStartTime: onSetStartTime,
+            onSetEndTime: onSetEndTime,
         ));
       },
     );
@@ -127,7 +133,9 @@ class _GuardListScreenState extends State<GuardListScreen>
                 _showGenerateListModal(
                     context,
                     _calculatePresentionTime(selectedStartTime),
-                    _calculatePresentionTime(selectedEndTime));
+                    _calculatePresentionTime(selectedEndTime),
+                    (time) => setState(() => selectedStartTime = time),
+                    (time) => setState(() => selectedEndTime = time));
               },
               child: const Icon(Icons.edit)),
           const SizedBox(height: 16.0),

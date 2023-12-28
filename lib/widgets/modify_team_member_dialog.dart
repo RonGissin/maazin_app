@@ -4,16 +4,26 @@ import '../models/team_member.dart';
 import 'package:provider/provider.dart';
 
 
-class AddTeamMemberDialog extends StatefulWidget {
+class ModifyTeamMemberDialog extends StatefulWidget {
   final List<TeamMember> teamMembers;
+  final String title;
+  final String actionButtonText;
+  final void Function(String) onActionButtonPressed;
 
-  const AddTeamMemberDialog({Key? key, required this.teamMembers}) : super(key: key);
+  const ModifyTeamMemberDialog(
+    {
+      Key? key,
+      required this.title,
+      required this.actionButtonText,
+      required this.onActionButtonPressed,
+      required this.teamMembers
+    }) : super(key: key);
 
   @override
-  _AddTeamMemberDialogState createState() => _AddTeamMemberDialogState();
+  _ModifyTeamMemberDialogState createState() => _ModifyTeamMemberDialogState();
 }
 
-class _AddTeamMemberDialogState extends State<AddTeamMemberDialog> {
+class _ModifyTeamMemberDialogState extends State<ModifyTeamMemberDialog> {
   TextEditingController _controller = TextEditingController();
   bool _showEmptyError = false;
   bool _showNameExistsError = false;
@@ -21,7 +31,7 @@ class _AddTeamMemberDialogState extends State<AddTeamMemberDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Add Team Member'),
+      title: Text(widget.title),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -59,12 +69,11 @@ class _AddTeamMemberDialogState extends State<AddTeamMemberDialog> {
             });
 
             if (!_showEmptyError && !_showNameExistsError) {
-              // Use TeamProvider to add the new team member
-              Provider.of<TeamProvider>(context, listen: false).addTeamMember(newMemberName);
+              widget.onActionButtonPressed(newMemberName);
               Navigator.pop(context);
             }
           },
-          child: const Text('Add'),
+          child: Text(widget.actionButtonText),
         ),
       ],
     );

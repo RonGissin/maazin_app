@@ -35,6 +35,15 @@ class TeamProvider extends ChangeNotifier {
     _saveTeamMembers();
   }
 
+  void editTeamMember(String existingMemberName, String newMemberName) {
+    _teamMembers.forEach((tm) {
+      if (tm.name.toLowerCase() == existingMemberName.toLowerCase()) {
+        tm.name = newMemberName;
+      }
+    });
+    _saveTeamMembers();
+  }
+
   // Save team members to SharedPreferences
   void _saveTeamMembers() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

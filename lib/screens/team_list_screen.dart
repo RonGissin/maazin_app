@@ -3,7 +3,7 @@ import 'package:maazin_app/models/team_member.dart';
 import 'package:provider/provider.dart';
 import '../widgets/team_list.dart';
 import '../team_provider.dart';
-import '../widgets/add_team_member_dialog.dart';
+import '../widgets/modify_team_member_dialog.dart';
 class TeamListScreen extends StatelessWidget {
   const TeamListScreen({Key? key}) : super(key: key);
 
@@ -30,7 +30,11 @@ class TeamListScreen extends StatelessWidget {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return AddTeamMemberDialog(teamMembers: teamMembers);
+                    return ModifyTeamMemberDialog(
+                      teamMembers: teamMembers,
+                      title: 'Add Team Member',
+                      actionButtonText: 'Add',
+                      onActionButtonPressed: (String newName) => Provider.of<TeamProvider>(context, listen: false).addTeamMember(newName));
                   },
                 );
               },

@@ -4,26 +4,54 @@ import '../team_provider.dart';
 import '../models/team_member.dart';
 import '../widgets/modify_team_member_dialog.dart';
 
-class TeamList extends StatelessWidget {
-  const TeamList({Key? key});
+
+class TeamList extends StatefulWidget {
+  const TeamList({Key? key}) : super(key: key);
+
+  @override
+  _TeamListState createState() => _TeamListState();
+}
+
+class _TeamListState extends State<TeamList> {
 
   @override
   Widget build(BuildContext context) {
-    // Use Provider to listen to changes in the team members
     List<TeamMember> teamMembers = Provider.of<TeamProvider>(context).teamMembers;
 
     return Expanded(
       child: ListView.builder(
         itemCount: teamMembers.length,
         itemBuilder: (context, index) {
+          TeamMember teamMember = teamMembers[index];
+
           return Card(
-            child: ListTile(
+            child: Opacity(
+              opacity: teamMember.isEnabled ? 1.0 : 0.5, // Adjust the opacity value as needed
+              child: ListTile(
               title: Row(
-                mainAxisAlignment: MainAxisAlignment.end, // Align icons to the right
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Expanded(child: Text(teamMembers[index].name)),
+                  Expanded(child: Text(teamMember.name)),
+                  if (teamMember.isEnabled)
+                    IconButton(
+                      icon: Icon(Icons.done),
+                      onPressed: () {
+                        teamMember.isEnabled = false;
+                        Provider.of<TeamProvider>(context, listen: false).saveTeamMembers();
+                        setState(() => {});
+                      },
+                    ),
+                  if (!teamMember.isEnabled)
+                    IconButton(
+                      icon: Icon(Icons.do_not_disturb),
+                      onPressed: () {
+                        teamMember.isEnabled = true;
+                        Provider.of<TeamProvider>(context, listen: false).saveTeamMembers();
+                        setState(() => {});
+                      },
+                    ),
                   IconButton(
-                    icon: Icon(Icons.edit),  // Add your first IconButton
+                    icon: Icon(Icons.edit),
                     onPressed: () {
                       showDialog(
                         context: context,
@@ -32,24 +60,53 @@ class TeamList extends StatelessWidget {
                             teamMembers: teamMembers,
                             title: 'Edit Team Member',
                             actionButtonText: 'Edit',
-                            onActionButtonPressed: (String newName) => Provider.of<TeamProvider>(context, listen: false).editTeamMember(teamMembers[index].name, newName));
+                            onActionButtonPressed: (String newName) =>
+                                Provider.of<TeamProvider>(context, listen: false)
+                                    .editTeamMember(teamMember.name, newName),
+                          );
                         },
                       );
                     },
                   ),
                   IconButton(
-                    icon: Icon(Icons.remove),  // Existing IconButton
+                    icon: Icon(Icons.remove),
                     onPressed: () {
-                      // Use TeamProvider to remove the team member
-                      Provider.of<TeamProvider>(context, listen: false).removeTeamMember(index);
+                      _showDeleteConfirmationDialog(context, index, teamMember.name);
                     },
                   ),
                 ],
               ),
-            ),
+            )),
           );
         },
       ),
+    );
+  }
+
+  void _showDeleteConfirmationDialog(BuildContext context, int teamMemberIndex, String teamMemberName) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text('Are you sure you want to delete $teamMemberName from the team?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Delete the team member
+                Provider.of<TeamProvider>(context, listen: false).removeTeamMember(teamMemberIndex);
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('Delete'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

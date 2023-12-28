@@ -9,11 +9,13 @@ class GuardListGenerator {
     DateTime startTime,
     DateTime endTime, 
     int? guardTime) {
+
     // Shuffle the teamMembers list randomly
-    teamMembers.shuffle();
+    var enabledMembers = teamMembers.where((m) => m.isEnabled).toList();
+    enabledMembers.shuffle();
 
     // Calculate the number of groups needed
-    int numGroups = (teamMembers.length / groupSize).ceil();
+    int numGroups = (enabledMembers.length / groupSize).ceil();
 
     // Calculate the total duration for guard time
     Duration totalDuration =  guardTime != null ?
@@ -32,7 +34,7 @@ class GuardListGenerator {
     // Group the shuffled members into equal-sized groups
     for (int i = 0; i < numGroups; i++) {
       int start = i * groupSize;
-      int end = min((i + 1) * groupSize, teamMembers.length);
+      int end = min((i + 1) * groupSize, enabledMembers.length);
       List<AssignedTeamMember> group = [];
 
       late DateTime memberEndTime;
@@ -41,7 +43,7 @@ class GuardListGenerator {
       for (int j = 0; j < end - start; j++) {
         DateTime memberStartTime = currentTime;
         memberEndTime = memberStartTime.add(groupDuration);
-        group.add(AssignedTeamMember(teamMembers[start + j].name, memberStartTime, memberEndTime));  
+        group.add(AssignedTeamMember(enabledMembers[start + j].name, enabledMembers[start +j].isEnabled, memberStartTime, memberEndTime));  
       }
 
       currentTime = memberEndTime;

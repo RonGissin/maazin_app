@@ -36,6 +36,10 @@ class _GenerateListModalState extends State<GenerateListModal> {
 
   @override
   Widget build(BuildContext context) {
+    var scheme = Theme.of(context).colorScheme;
+    var primary = scheme.primary;
+    var secondary = scheme.secondary;
+
     return Container(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -45,7 +49,7 @@ class _GenerateListModalState extends State<GenerateListModal> {
             'Select Start Time and End Time',
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 10.0),
+          const SizedBox(height: 20.0),
           DateTimePicker(
             label: 'Start Time',
             initialTime: widget.previousStartTime,
@@ -55,7 +59,7 @@ class _GenerateListModalState extends State<GenerateListModal> {
               });
             },
           ),
-          const SizedBox(height: 10.0),
+          const SizedBox(height: 20.0),
           DateTimePicker(
             label: 'End Time',
             initialTime: widget.previousEndTime,
@@ -66,7 +70,7 @@ class _GenerateListModalState extends State<GenerateListModal> {
               });
             },
           ),
-          const SizedBox(height: 10.0),
+          const SizedBox(height: 20.0),
           Visibility(
             visible: isInvalidTime,
             child: Text(
@@ -74,7 +78,7 @@ class _GenerateListModalState extends State<GenerateListModal> {
               style: TextStyle(color: Colors.red),
             ),
           ),
-          const SizedBox(height: 10.0),
+          const SizedBox(height: 20.0),
           NumberOfGuardsInput(
             initialState: numberOfConcurrentGuards,
             onChanged: (value) {
@@ -83,7 +87,7 @@ class _GenerateListModalState extends State<GenerateListModal> {
               });
             },
           ),
-          const SizedBox(height: 10.0),
+          const SizedBox(height: 20.0),
           Row(
             children: [
               Switch(
@@ -113,8 +117,11 @@ class _GenerateListModalState extends State<GenerateListModal> {
               ),
             ),
           ),
-          Center(
+          Padding(padding: EdgeInsets.all(20.0), child: Center(
             child: ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(secondary),
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.white)),
               onPressed: () {
                 setState(() {
                   isInvalidTime = selectedStartTime.isAfter(selectedEndTime);
@@ -134,7 +141,8 @@ class _GenerateListModalState extends State<GenerateListModal> {
               },
               child: const Text('Generate'),
             ),
-          ),
+          )),
+          const SizedBox(height: 30.0),
         ],
       ),
     );

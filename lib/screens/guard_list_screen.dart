@@ -35,13 +35,15 @@ class _GuardListScreenState extends State<GuardListScreen>
   void _showGenerateListModal(
       BuildContext context, DateTime previousStartTime, DateTime previousEndTime) {
     showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
       builder: (BuildContext context) {
-        return GenerateListModal(
-          onGenerateList: _generateList, // Pass the callback function
-          previousStartTime: previousStartTime,
-          previousEndTime: previousEndTime,
-        );
+        return SingleChildScrollView(
+          child: GenerateListModal(
+            onGenerateList: _generateList, // Pass the callback function
+            previousStartTime: previousStartTime,
+            previousEndTime: previousEndTime,
+        ));
       },
     );
   }
@@ -122,7 +124,8 @@ class _GuardListScreenState extends State<GuardListScreen>
           ),
           FloatingActionButton(
               onPressed: () {
-                _showGenerateListModal(context,
+                _showGenerateListModal(
+                    context,
                     _calculatePresentionTime(selectedStartTime),
                     _calculatePresentionTime(selectedEndTime));
               },

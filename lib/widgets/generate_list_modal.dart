@@ -15,7 +15,7 @@ class GenerateListModal extends StatefulWidget {
     required this.previousEndTime,
     required this.onGenerateList,
     required this.onSetStartTime,
-    required this.onSetEndTime
+    required this.onSetEndTime,
   }) : super(key: key);
 
   @override
@@ -36,6 +36,28 @@ class _GenerateListModalState extends State<GenerateListModal> {
     super.initState();
     selectedStartTime = widget.previousStartTime;
     selectedEndTime = widget.previousEndTime;
+  }
+
+  void _showFixedTimeInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text(
+            'When fixed guard time is toggled on, each team member might guard more than once if needed (cycles).',
+            style: TextStyle(fontSize: 17.0)          
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -74,7 +96,7 @@ class _GenerateListModalState extends State<GenerateListModal> {
                 selectedEndTime = time;
                 isInvalidTime = selectedStartTime.isAfter(selectedEndTime);
               });
-              
+
               widget.onSetEndTime(time);
             },
           ),
@@ -98,15 +120,23 @@ class _GenerateListModalState extends State<GenerateListModal> {
           const SizedBox(height: 20.0),
           Row(
             children: [
-              Switch(
-                value: isFixedGuardTime,
-                onChanged: (value) {
-                  setState(() {
-                    isFixedGuardTime = value;
-                  });
+              Padding(
+                padding: EdgeInsets.only(right: 10.0),
+                child: Switch(
+                  value: isFixedGuardTime,
+                  onChanged: (value) {
+                    setState(() {
+                      isFixedGuardTime = value;
+                    });
+                  },
+              )),
+              Text('Fixed Guard Time'),
+              IconButton(
+                icon: Icon(Icons.info),
+                onPressed: () {
+                  _showFixedTimeInfoDialog(context);
                 },
               ),
-              Text('Fixed Guard Time'),
             ],
           ),
           Visibility(
@@ -125,31 +155,35 @@ class _GenerateListModalState extends State<GenerateListModal> {
               ),
             ),
           ),
-          Padding(padding: EdgeInsets.all(20.0), child: Center(
-            child: ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(secondary),
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.white)),
-              onPressed: () {
-                setState(() {
-                  isInvalidTime = selectedStartTime.isAfter(selectedEndTime);
-                });
-                // Perform validation
-                if (isInvalidTime) {
-                  return;
-                }
+          Padding(
+            padding: EdgeInsets.all(20.0),
+            child: Center(
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(secondary),
+                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                ),
+                onPressed: () {
+                  setState(() {
+                    isInvalidTime = selectedStartTime.isAfter(selectedEndTime);
+                  });
+                  // Perform validation
+                  if (isInvalidTime) {
+                    return;
+                  }
 
-                widget.onGenerateList(
-                  selectedStartTime,
-                  selectedEndTime,
-                  isFixedGuardTime ? intGuardTime : null,
-                  numberOfConcurrentGuards,
-                  isFixedGuardTime
-                );
-              },
-              child: const Text('Generate'),
+                  widget.onGenerateList(
+                    selectedStartTime,
+                    selectedEndTime,
+                    isFixedGuardTime ? intGuardTime : null,
+                    numberOfConcurrentGuards,
+                    isFixedGuardTime,
+                  );
+                },
+                child: const Text('Generate'),
+              ),
             ),
-          )),
+          ),
           const SizedBox(height: 30.0),
         ],
       ),

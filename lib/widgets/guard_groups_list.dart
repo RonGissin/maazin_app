@@ -69,7 +69,7 @@ class GuardGroupsList extends StatelessWidget {
 
   String getReadableList() {
     StringBuffer formattedList = StringBuffer();
-    formattedList.writeln('**Guard List**'); // WhatsApp markdown for bold text
+    formattedList.writeln('*Guard List*'); // WhatsApp markdown for bold text
 
     for (int i = 0; i < guardGroups.length; i++) {
       formattedList.write('- ');

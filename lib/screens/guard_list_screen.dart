@@ -6,8 +6,6 @@ import '../models/team_member.dart';
 import '../widgets/guard_groups_list.dart';
 import 'package:provider/provider.dart';
 import '../team_provider.dart'; // Import the TeamProvider class
-import '../widgets/datetime_picker.dart';
-import '../widgets/number_of_guards_input.dart';
 import 'package:flutter/services.dart';
 
 class GuardListScreen extends StatefulWidget {
@@ -45,115 +43,6 @@ class _GuardListScreenState extends State<GuardListScreen>
           previousEndTime: previousEndTime,
         );
       },
-    );
-  }
-
-  Widget _buildGenerateListModal(
-      BuildContext context, DateTime previousStartTime, DateTime previousEndTime) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Select Start Time and End Time',
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 10.0),
-          DateTimePicker(
-            label: 'Start Time',
-            initialTime: previousStartTime,
-            onTimeChanged: (DateTime time) {
-              setState(() {
-                selectedStartTime = time;
-              });
-            },
-          ),
-          const SizedBox(height: 10.0),
-          DateTimePicker(
-            label: 'End Time',
-            initialTime: previousEndTime,
-            onTimeChanged: (DateTime time) {
-              setState(() {
-                selectedEndTime = time;
-                isInvalidTime = selectedStartTime.isAfter(selectedEndTime);
-              });
-            },
-          ),
-          const SizedBox(height: 10.0),
-          Visibility(
-            visible: isInvalidTime,
-            child: Text(
-              'End time cannot be earlier than start time',
-              style: TextStyle(color: Colors.red),
-            ),
-          ),
-          const SizedBox(height: 10.0),
-          NumberOfGuardsInput(
-            initialState: numberOfConcurrentGuards,
-            onChanged: (value) {
-              setState(() {
-                numberOfConcurrentGuards = value;
-              });
-            },
-          ),
-          const SizedBox(height: 10.0),
-          Row(
-            children: [
-              Switch( // Change Checkbox to Switch
-                value: isFixedGuardTime,
-                onChanged: (value) {
-                  setState(() {
-                    isFixedGuardTime = value;
-                  });
-                },
-              ),
-              Text('Fixed Guard Time'),
-            ],
-          ),
-          Visibility(
-            visible: isFixedGuardTime,
-            child: TextField(
-              controller: doubleGuardTimeController,
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                setState(() {
-                  intGuardTime = int.tryParse(value);
-                });
-              },
-              decoration: InputDecoration(
-                labelText: 'Guard Time in minutes - optional',
-                hintText: 'Enter guard time in minutes',
-              ),
-            ),
-          ),
-          Center(
-            child: ElevatedButton(
-            onPressed: () {
-              setState(() {
-                isInvalidTime = selectedStartTime.isAfter(selectedEndTime);
-              });
-              // Perform validation
-              if (isInvalidTime) {
-                return;
-              }
-
-              // Perform list generation logic here
-              setState(() {
-                guardGroups = generator.generateGuardGroups(
-                  teamMembers,
-                  numberOfConcurrentGuards,
-                  selectedStartTime,
-                  selectedEndTime,
-                  isFixedGuardTime ? intGuardTime : null,
-                );
-              });
-              Navigator.pop(context); // Close the modal
-            },
-            child: const Text('Generate'),
-          )),
-        ],
-      ),
     );
   }
 

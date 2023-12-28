@@ -5,7 +5,7 @@ import '../date_formatter.dart';
 class GuardGroupsList extends StatelessWidget {
   final List<List<AssignedTeamMember>> guardGroups;
 
-  const GuardGroupsList({super.key, required this.guardGroups});
+  const GuardGroupsList({Key? key, required this.guardGroups}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,32 +20,40 @@ class GuardGroupsList extends StatelessWidget {
         itemBuilder: (context, index) {
           return Card(
             child: ListTile(
-              title: Row(
+              title: Wrap(
                 children: [
-                  ...guardGroups[index].map((e) => 
-                    Container(
-                      height: 50.0, // Adjust the height as needed
-                      child: Card(
-                        elevation: 3,
-                        color: invPrimaryColor,
-                        child: Center(
-                          child: Padding(padding: EdgeInsets.all(10), child: Text(e.name))
+                  ...guardGroups[index].map(
+                    (e) => FittedBox(
+                      child: Container(
+                        height: 50.0, // Adjust the height as needed
+                        child: Card(
+                          elevation: 3,
+                          color: invPrimaryColor,
+                          child: Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Text(e.name),
+                            ),
                           ),
+                        ),
                       ),
                     ),
                   ),
-                  Container(
-                    height: 50.0, // Adjust the height as needed
-                    child: Card(
-                      color: primaryColor,
-                      elevation: 3,
-                      child: Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Text(
-                          '${DateFormatter.formatTime(guardGroups[index][0].startTime)} - ${DateFormatter.formatTime(guardGroups[index][0].endTime)}',
-                          style: TextStyle(color: invPrimaryColor),
-                        )),
+                  FittedBox(
+                    child: Container(
+                      height: 50.0, // Adjust the height as needed
+                      child: Card(
+                        color: primaryColor,
+                        elevation: 3,
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Text(
+                              '${DateFormatter.formatTime(guardGroups[index][0].startTime)} - ${DateFormatter.formatTime(guardGroups[index][0].endTime)}',
+                              style: TextStyle(color: invPrimaryColor),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),

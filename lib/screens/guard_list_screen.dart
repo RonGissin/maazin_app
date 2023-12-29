@@ -132,8 +132,8 @@ class _GuardListScreenState extends State<GuardListScreen>
               onPressed: () {
                 _showGenerateListModal(
                     context,
-                    _calculatePresentionTime(selectedStartTime),
-                    _calculatePresentionTime(selectedEndTime),
+                    selectedStartTime,
+                    selectedEndTime,
                     (time) => setState(() => selectedStartTime = time),
                     (time) => setState(() => selectedEndTime = time));
               },
@@ -142,11 +142,5 @@ class _GuardListScreenState extends State<GuardListScreen>
         ],
       ),
     );
-  }
-
-  DateTime _calculatePresentionTime(DateTime startTime) {
-    return startTime.difference(DateTime.now()) < Duration.zero
-        ? DateTime.now()
-        : startTime;
   }
 }

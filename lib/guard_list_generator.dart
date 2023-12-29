@@ -34,7 +34,7 @@ class GuardListGenerator {
     DateTime currentTime = startTime;
 
     Duration tempDuration = Duration.zero;
-    while( tempDuration.inMinutes <= totalDuration.inMinutes )
+    while( tempDuration.inMinutes < totalDuration.inMinutes )
     {
       // Group the shuffled members into equal-sized groups
       for (int i = 0; i < numGroups; i++) {

@@ -28,12 +28,7 @@ class TeamListScreen extends StatelessWidget {
             Center(
               child: Padding(
                 padding: EdgeInsets.all(5.0),
-                child: Text("Total: ${teamMembers.length}")
-              )),
-            Center(
-              child: Padding(
-                padding: EdgeInsets.all(5.0),
-                child: Text("Included: ${teamMembers.where((tm) => tm.isEnabled).length}")
+                child: Text("${teamMembers.where((tm) => tm.isEnabled).length} available of ${teamMembers.length}")
               )),
             ElevatedButton.icon(
               onPressed: () {

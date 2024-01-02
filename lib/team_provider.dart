@@ -50,7 +50,7 @@ class TeamProvider extends ChangeNotifier with WidgetsBindingObserver{
 
   // Add a new team member
   void addTeamMember(String newMemberName) {
-    _teamMembers.add(TeamMember(name: newMemberName, isEnabled: true));
+    _teamMembers.insert(0, TeamMember(name: newMemberName, isEnabled: true));
     saveTeamMembers();
   }
 

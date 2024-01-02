@@ -42,7 +42,7 @@ class _ModifyTeamMemberDialogState extends State<ModifyTeamMemberDialog> {
           SizedBox(height: 8.0),
           Text(
             _showEmptyError
-                ? 'Please enter a valid input'
+                ? 'Please enter a non empty name'
                 : _showNameExistsError
                     ? 'Please enter a non-existing name'
                     : '',

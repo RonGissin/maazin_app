@@ -34,35 +34,33 @@ class GuardListGenerator {
     DateTime currentTime = startTime;
 
     Duration tempDuration = Duration.zero;
-    while( tempDuration.inMinutes < totalDuration.inMinutes )
+    int teamMemberPointer = 0;
+
+    while(tempDuration.inMinutes < totalDuration.inMinutes)
     {
-      // Group the shuffled members into equal-sized groups
-      for (int i = 0; i < numGroups; i++) {
-        int start = i * groupSize;
-        int end = min((i + 1) * groupSize, enabledMembers.length);
-        List<AssignedTeamMember> group = [];
+      List<AssignedTeamMember> group = [];
+      late DateTime memberEndTime;
 
-        late DateTime memberEndTime;
-
+      for (int i = 0; i < groupSize; i++) {
         // Assign guard time to the group
-        for (int j = 0; j < end - start; j++) {
-          DateTime memberStartTime = currentTime;
-          memberEndTime = memberStartTime.add(groupDuration);
-          group.add(AssignedTeamMember(enabledMembers[start + j].name, enabledMembers[start +j].isEnabled, memberStartTime, memberEndTime));  
-        }
+        DateTime memberStartTime = currentTime;
+        memberEndTime = memberStartTime.add(groupDuration);
 
-        currentTime = memberEndTime;
+        var teamMember = enabledMembers[teamMemberPointer];
 
-        groups.add(group);
+        group.add(AssignedTeamMember(teamMember.name, teamMember.isEnabled, memberStartTime, memberEndTime)); 
 
-        tempDuration += groupDuration;
-
-        if (tempDuration  >=  totalDuration)
-        {
-          break;
-        }
+        teamMemberPointer = (teamMemberPointer + 1) % enabledMembers.length;
       }
 
+      currentTime = memberEndTime;
+      groups.add(group);
+      tempDuration += groupDuration;
+
+      if (tempDuration >= totalDuration)
+      {
+        break;
+      }
     }
 
     return groups;

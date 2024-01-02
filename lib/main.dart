@@ -44,11 +44,11 @@ class MaazinHomePage extends StatelessWidget {
           title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.group_outlined, // Replace with your desired icon
-              color: secondaryColor,
-              size: 30.0,
-            ),
+            // Image.asset(
+            //  'assets/soldier3.png',
+            //  width: 30.0,
+            //  height: 30.0,
+            // ),
             SizedBox(width: 5.0), // Add spacing between icon and text
             Text(
               'Maazin',

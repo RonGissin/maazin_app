@@ -72,7 +72,7 @@ class _GenerateListModalState extends State<GenerateListModal> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Select Start Time and End Time',
+            'Configure your watch',
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 20.0),

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../widgets/team_list.dart';
 import '../team_provider.dart';
 import '../widgets/modify_team_member_dialog.dart';
+
 class TeamListScreen extends StatelessWidget {
   const TeamListScreen({Key? key}) : super(key: key);
 
@@ -20,11 +21,20 @@ class TeamListScreen extends StatelessWidget {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(right: 16.0, left: 16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Center(child: Padding(padding: EdgeInsets.all(10.0), child: Text("Total: ${teamMembers.length}"))),
+            Center(
+              child: Padding(
+                padding: EdgeInsets.all(5.0),
+                child: Text("Total: ${teamMembers.length}")
+              )),
+            Center(
+              child: Padding(
+                padding: EdgeInsets.all(5.0),
+                child: Text("Included: ${teamMembers.where((tm) => tm.isEnabled).length}")
+              )),
             ElevatedButton.icon(
               onPressed: () {
                 showDialog(

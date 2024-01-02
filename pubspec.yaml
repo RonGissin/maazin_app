@@ -54,6 +54,9 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
 
+  assets:
+    - assets/soldier4.png
+
   fonts:
     - family: BlackOpsOne
       fonts:

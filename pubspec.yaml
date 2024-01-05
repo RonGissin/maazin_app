@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_svg: ^0.22.0
   shared_preferences: ^2.0.9
   provider: ^6.1.1
 
@@ -55,7 +56,7 @@ dev_dependencies:
 flutter:
 
   assets:
-    - assets/soldier4.png
+    - assets/logo.svg
 
   fonts:
     - family: BlackOpsOne

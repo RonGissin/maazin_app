@@ -13,7 +13,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     super.initState();
     
     // Simulate loading by delaying for 3 seconds
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(milliseconds: 1500), () {
       // Transition to the MainContentScreen
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => MaazinHomePage()),

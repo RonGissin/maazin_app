@@ -63,7 +63,6 @@ class _GenerateListModalState extends State<GenerateListModal> {
   @override
   Widget build(BuildContext context) {
     var scheme = Theme.of(context).colorScheme;
-    var primary = scheme.primary;
     var secondary = scheme.secondary;
 
     return Container(

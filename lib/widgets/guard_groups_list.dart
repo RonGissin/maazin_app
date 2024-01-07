@@ -12,10 +12,37 @@ class GuardGroupsList extends StatelessWidget {
     var scheme = Theme.of(context).colorScheme;
     Color invPrimaryColor = scheme.inversePrimary;
     Color primaryColor = scheme.primary;
+    var isEmpty = guardGroups.isEmpty;
+
+    var listWidget = _getListWidget(isEmpty, primaryColor, invPrimaryColor);
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: ListView.builder(
+      child: listWidget
+    );
+  }
+
+  Widget _getListWidget(bool isEmpty, Color primary, Color inversePrimary) {
+    var noListTextColumn = const Card(child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: Center(
+              child: Text("No list yet..", style: TextStyle(fontSize: 15))
+          )),
+          Padding(
+            padding: EdgeInsets.all(10), 
+            child: Center(
+              child: Text("press the edit button to generate a list", style: TextStyle(fontSize: 15))
+          )),
+        ],
+    ));
+
+    var widget = isEmpty ? 
+      noListTextColumn : 
+      ListView.builder(
         itemCount: guardGroups.length,
         itemBuilder: (context, index) {
           return Card(
@@ -28,7 +55,7 @@ class GuardGroupsList extends StatelessWidget {
                         height: 50.0, // Adjust the height as needed
                         child: Card(
                           elevation: 3,
-                          color: invPrimaryColor,
+                          color: inversePrimary,
                           child: Center(
                             child: Padding(
                               padding: EdgeInsets.all(10),
@@ -43,14 +70,14 @@ class GuardGroupsList extends StatelessWidget {
                     child: Container(
                       height: 50.0, // Adjust the height as needed
                       child: Card(
-                        color: primaryColor,
+                        color: primary,
                         elevation: 3,
                         child: Center(
                           child: Padding(
                             padding: EdgeInsets.all(10),
                             child: Text(
                               '${DateFormatter.formatTime(guardGroups[index][0].startTime)} - ${DateFormatter.formatTime(guardGroups[index][0].endTime)}',
-                              style: TextStyle(color: invPrimaryColor),
+                              style: TextStyle(color: inversePrimary),
                             ),
                           ),
                         ),
@@ -63,8 +90,9 @@ class GuardGroupsList extends StatelessWidget {
             ),
           );
         },
-      ),
-    );
+      );
+
+      return widget;
   }
 
   String getReadableList() {

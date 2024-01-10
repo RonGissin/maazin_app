@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './datetime_picker.dart';
 import './number_of_guards_input.dart';
+import 'package:flutter/cupertino.dart';
 
 class GenerateListModal extends StatefulWidget {
   final DateTime previousStartTime;
@@ -63,8 +64,7 @@ class _GenerateListModalState extends State<GenerateListModal> {
   @override
   Widget build(BuildContext context) {
     var scheme = Theme.of(context).colorScheme;
-    var secondary = scheme.secondary;
-
+    
     return Container(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -140,26 +140,36 @@ class _GenerateListModalState extends State<GenerateListModal> {
           ),
           Visibility(
             visible: isFixedGuardTime,
-            child: TextField(
-              controller: doubleGuardTimeController,
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                setState(() {
-                  intGuardTime = int.tryParse(value);
-                });
-              },
-              decoration: InputDecoration(
-                labelText: 'Guard Time in minutes - optional',
-                hintText: 'Enter guard time in minutes',
+            child: Center(child: Container(
+              height: 100.0, 
+              width: 50.0,// Fixed height for the picker
+              child: CupertinoPicker(
+                selectionOverlay: CupertinoPickerDefaultSelectionOverlay(background: scheme.primary.withOpacity(0.4)),
+                magnification: 1.2,
+                diameterRatio: 1.1,
+                itemExtent: 32.0, // Height of each item
+                onSelectedItemChanged: (int value) {
+                  setState(() {
+                    intGuardTime = value;
+                  });
+                },
+                children: List<Widget>.generate(200, (int index) {
+                  return Center(
+                    child: Text(
+                      index.toString(),
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  );
+                }),
               ),
-            ),
+            )),
           ),
           Padding(
             padding: EdgeInsets.all(20.0),
             child: Center(
               child: ElevatedButton(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(secondary),
+                  backgroundColor: MaterialStateProperty.all<Color>(scheme.secondary),
                   foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
                 ),
                 onPressed: () {

@@ -140,29 +140,38 @@ class _GenerateListModalState extends State<GenerateListModal> {
           ),
           Visibility(
             visible: isFixedGuardTime,
-            child: Center(child: Container(
-              height: 100.0, 
-              width: 50.0,// Fixed height for the picker
-              child: CupertinoPicker(
-                selectionOverlay: CupertinoPickerDefaultSelectionOverlay(background: scheme.primary.withOpacity(0.4)),
-                magnification: 1.2,
-                diameterRatio: 1.1,
-                itemExtent: 32.0, // Height of each item
-                onSelectedItemChanged: (int value) {
-                  setState(() {
-                    intGuardTime = value;
-                  });
-                },
-                children: List<Widget>.generate(200, (int index) {
-                  return Center(
-                    child: Text(
-                      index.toString(),
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  );
-                }),
+            child: Center(
+              child: Container(
+                height: 100.0, 
+                width: 250.0, // Fixed width for the picker
+                child: CupertinoPicker(
+                  selectionOverlay: CupertinoPickerDefaultSelectionOverlay(background: scheme.primary.withOpacity(0.5)),
+                  magnification: 1.2,
+                  diameterRatio: 1.1,
+                  itemExtent: 32.0, // Height of each item
+                  onSelectedItemChanged: (int value) {
+                    setState(() {
+                      intGuardTime = value;
+                    });
+                  },
+                  children: List<Widget>.generate(200, (int index) {
+                    return Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          index.toString(),
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        Text(
+                          ' min',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    );
+                  }),
+                ),
               ),
-            )),
+            ),
           ),
           Padding(
             padding: EdgeInsets.all(20.0),

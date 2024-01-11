@@ -35,7 +35,7 @@ class GuardGroupsList extends StatelessWidget {
           Padding(
             padding: EdgeInsets.all(10), 
             child: Center(
-              child: Text("press the edit button to generate a list", style: TextStyle(fontSize: 15))
+              child: Text("press the + button to generate a list", style: TextStyle(fontSize: 15))
           )),
         ],
     ));

@@ -100,58 +100,59 @@ class _GuardListScreenState extends State<GuardListScreen>
   }
 
   @override
-  Widget build(BuildContext context) {
-    super.build(context);
+Widget build(BuildContext context) {
+  super.build(context);
 
-    Color secondaryColor = Theme.of(context).colorScheme.secondary;
-    teamMembers = Provider.of<TeamProvider>(context).teamMembers;
-    guardGroupsList = GuardGroupsList(guardGroups: guardGroups);
+  Color secondaryColor = Theme.of(context).colorScheme.secondary;
+  teamMembers = Provider.of<TeamProvider>(context).teamMembers;
+  guardGroupsList = GuardGroupsList(guardGroups: guardGroups);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Guard List',
-          style: TextStyle(color: secondaryColor),
-        ),
+  return Scaffold(
+    appBar: AppBar(
+      title: Text(
+        'Guard List',
+        style: TextStyle(color: secondaryColor),
       ),
-      body: guardGroupsList,
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+    ),
+    body: guardGroupsList, // The scrollable list
+    bottomNavigationBar: BottomAppBar(
+      elevation: 0.0,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: FloatingActionButton(
-              onPressed: () {
-                final String readableList = guardGroupsList.getReadableList();
-                Share.share(readableList);
-              },
-              child: const Icon(Icons.share_sharp),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: FloatingActionButton(
-              onPressed: () {
-                Clipboard.setData(
-                    ClipboardData(text: guardGroupsList.getReadableList()));
-                _showSnackBar(context, 'Copied!');
-              },
-              child: const Icon(Icons.copy),
-            ),
-          ),
           FloatingActionButton(
-              onPressed: () {
-                _showGenerateListModal(
-                    context,
-                    selectedStartTime,
-                    selectedEndTime,
-                    (time) => setState(() => selectedStartTime = time),
-                    (time) => setState(() => selectedEndTime = time));
-              },
-              child: Icon(guardGroups.isEmpty ? Icons.add : Icons.edit)),
-          const SizedBox(height: 16.0),
+            onPressed: () {
+              final String readableList = guardGroupsList.getReadableList();
+              Share.share(readableList);
+            },
+            child: const Icon(Icons.share_sharp),
+          ),
+          SizedBox(width: 16), // Space between buttons
+          FloatingActionButton(
+            onPressed: () {
+              Clipboard.setData(
+                  ClipboardData(text: guardGroupsList.getReadableList()));
+              _showSnackBar(context, 'Copied!');
+            },
+            child: const Icon(Icons.copy),
+          ),
+          SizedBox(width: 16), // Space between buttons
+          FloatingActionButton(
+            onPressed: () {
+              _showGenerateListModal(
+                  context,
+                  selectedStartTime,
+                  selectedEndTime,
+                  (time) => setState(() => selectedStartTime = time),
+                  (time) => setState(() => selectedEndTime = time));
+            },
+            child: Icon(guardGroups.isEmpty ? Icons.add : Icons.edit),
+          ),
+          SizedBox(width: 16), // Space at the end
         ],
       ),
-    );
-  }
-}
+      shape: CircularNotchedRectangle(), // Optional: for a notch if you have a FAB in the center
+      // color: Colors.white, // Set color as per your design
+    ),
+  );
+}}

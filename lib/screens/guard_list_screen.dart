@@ -148,7 +148,7 @@ class _GuardListScreenState extends State<GuardListScreen>
                     (time) => setState(() => selectedStartTime = time),
                     (time) => setState(() => selectedEndTime = time));
               },
-              child: const Icon(Icons.edit)),
+              child: Icon(guardGroups.isEmpty ? Icons.add : Icons.edit)),
           const SizedBox(height: 16.0),
         ],
       ),

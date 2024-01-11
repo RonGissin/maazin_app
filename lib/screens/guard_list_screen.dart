@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import '../widgets/generate_list_modal.dart'; // Import the GenerateListModal class
+import 'package:maazin_app/widgets/generate_list_modal.dart'; // Import the GenerateListModal class
 import 'package:maazin_app/guard_list_generator.dart';
 import 'package:maazin_app/models/assigned_team_member.dart';
-import '../models/team_member.dart';
-import '../widgets/guard_groups_list.dart';
+import 'package:maazin_app/models/team_member.dart';
+import 'package:maazin_app/widgets/guard_groups_list.dart';
 import 'package:provider/provider.dart';
-import '../team_provider.dart'; // Import the TeamProvider class
+import 'package:maazin_app/team_provider.dart'; // Import the TeamProvider class
 import 'package:flutter/services.dart';
+import 'package:share/share.dart'; // Import the share package
 
 class GuardListScreen extends StatefulWidget {
   const GuardListScreen({Key? key}) : super(key: key);
@@ -117,6 +118,16 @@ class _GuardListScreenState extends State<GuardListScreen>
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: FloatingActionButton(
+              onPressed: () {
+                final String readableList = guardGroupsList.getReadableList();
+                Share.share(readableList);
+              },
+              child: const Icon(Icons.share_sharp),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: FloatingActionButton(

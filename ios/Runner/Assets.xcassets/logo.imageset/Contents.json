@@ -1,14 +1,17 @@
 {
   "images" : [
     {
+      "filename" : "logo 3.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "logo 4.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "logo 5.svg",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -18,10 +21,12 @@
       "scale" : "1x"
     },
     {
+      "filename" : "logo 1.svg",
       "idiom" : "iphone",
       "scale" : "2x"
     },
     {
+      "filename" : "logo 2.svg",
       "idiom" : "iphone",
       "scale" : "3x"
     }

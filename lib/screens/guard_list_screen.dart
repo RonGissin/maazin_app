@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:maazin_app/widgets/generate_list_modal.dart'; // Import the GenerateListModal class
 import 'package:maazin_app/guard_list_generator.dart';
 import 'package:maazin_app/models/assigned_team_member.dart';
@@ -17,7 +18,7 @@ class GuardListScreen extends StatefulWidget {
 }
 
 class _GuardListScreenState extends State<GuardListScreen>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
   List<List<AssignedTeamMember>> guardGroups = [];
   List<TeamMember> teamMembers = [];
   GuardListGenerator generator = GuardListGenerator();
@@ -29,6 +30,32 @@ class _GuardListScreenState extends State<GuardListScreen>
   int? intGuardTime;
   TextEditingController doubleGuardTimeController = TextEditingController();
   bool isFixedGuardTime = false;
+  bool isAppBarVisible = true;
+  late AnimationController _controller;
+  late Animation<Offset> _offsetAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+
+    _offsetAnimation = Tween<Offset>(
+      begin: Offset.zero,
+      end: const Offset(0.0, 1.0),
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   bool get wantKeepAlive => true;
@@ -102,10 +129,54 @@ class _GuardListScreenState extends State<GuardListScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-
     var scheme = Theme.of(context).colorScheme;
     teamMembers = Provider.of<TeamProvider>(context).teamMembers;
     guardGroupsList = GuardGroupsList(guardGroups: guardGroups);
+
+    List<Widget> fabWidgets = guardGroups.isEmpty 
+      ? [
+          FloatingActionButton(
+            onPressed: () {
+              _showGenerateListModal(
+                  context,
+                  selectedStartTime,
+                  selectedEndTime,
+                  (time) => setState(() => selectedStartTime = time),
+                  (time) => setState(() => selectedEndTime = time));
+            },
+            child: const Icon(Icons.add),
+          ),
+        ]
+      : [
+          FloatingActionButton(
+            onPressed: () {
+              Clipboard.setData(
+                  ClipboardData(text: guardGroupsList.getReadableList()));
+              _showSnackBar(context, 'Copied!');
+            },
+            child: const Icon(Icons.copy),
+          ),
+          SizedBox(width: 16),
+          FloatingActionButton(
+            onPressed: () {
+              final String readableList = guardGroupsList.getReadableList();
+              Share.share(readableList);
+            },
+            child: const Icon(Icons.share_sharp),
+          ),
+          SizedBox(width: 16),
+          FloatingActionButton(
+            onPressed: () {
+              _showGenerateListModal(
+                  context,
+                  selectedStartTime,
+                  selectedEndTime,
+                  (time) => setState(() => selectedStartTime = time),
+                  (time) => setState(() => selectedEndTime = time));
+            },
+            child: const Icon(Icons.edit),
+          ),
+        ];
 
     return Scaffold(
       appBar: AppBar(
@@ -114,45 +185,48 @@ class _GuardListScreenState extends State<GuardListScreen>
           style: TextStyle(color: scheme.secondary),
         ),
       ),
-      body: guardGroupsList, // The scrollable list
-      bottomNavigationBar: BottomAppBar(
-        notchMargin: 0.0,
-        elevation: 0.0,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+      body: NotificationListener<UserScrollNotification>(
+        onNotification: (notification) {
+          if (guardGroups.isEmpty) {
+            setState(() => isAppBarVisible = true);
+          } else {
+            if (notification.direction == ScrollDirection.reverse) {
+              // User scrolled down
+              if (isAppBarVisible) setState(() => isAppBarVisible = false);
+            } else if (notification.direction == ScrollDirection.forward) {
+              // User scrolled up
+              if (!isAppBarVisible) setState(() => isAppBarVisible = true);
+            }
+          }
+          return true;
+        },
+        child: Stack(
           children: [
-            FloatingActionButton(
-              onPressed: () {
-                final String readableList = guardGroupsList.getReadableList();
-                Share.share(readableList);
-              },
-              child: const Icon(Icons.share_sharp),
+            guardGroupsList, // Full screen height
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: AnimatedOpacity(
+                opacity: isAppBarVisible ? 1.0 : 0.0,
+                duration: Duration(milliseconds: 300),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                  child: BottomAppBar(
+                    notchMargin: 4.0,
+                    elevation: 4.0,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: fabWidgets,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
-            SizedBox(width: 16), // Space between buttons
-            FloatingActionButton(
-              onPressed: () {
-                Clipboard.setData(
-                    ClipboardData(text: guardGroupsList.getReadableList()));
-                _showSnackBar(context, 'Copied!');
-              },
-              child: const Icon(Icons.copy),
-            ),
-            SizedBox(width: 16), // Space between buttons
-            FloatingActionButton(
-              onPressed: () {
-                _showGenerateListModal(
-                    context,
-                    selectedStartTime,
-                    selectedEndTime,
-                    (time) => setState(() => selectedStartTime = time),
-                    (time) => setState(() => selectedEndTime = time));
-              },
-              child: Icon(guardGroups.isEmpty ? Icons.add : Icons.edit),
-            ),
-            SizedBox(width: 16), // Space at the end
           ],
         ),
-        //shape: CircularNotchedRectangle(), // Optional: for a notch if you have a FAB in the center
       ),
     );
-  }}
+  }
+}

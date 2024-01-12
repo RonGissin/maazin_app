@@ -113,18 +113,16 @@ class _GuardListScreenState extends State<GuardListScreen>
     DateTime endTime,
     int? guardTime,
     int numberOfConcurrentGuards,
-    bool isFixedGuardTime, // Add this parameter
+    bool isFixedGuardTime,
   ) {
     setState(() {
       isInvalidTime = startTime.isAfter(endTime);
     });
 
-    // Perform validation
     if (isInvalidTime) {
       return;
     }
 
-    // Perform list generation logic here
     setState(() {
       guardGroups = generator.generateGuardGroups(
         teamMembers,
@@ -134,8 +132,31 @@ class _GuardListScreenState extends State<GuardListScreen>
         isFixedGuardTime ? guardTime : null,
       );
     });
-    Navigator.pop(context); // Close the modal
+
+    if (guardGroups.isEmpty) {
+      // Display a dialog if the guardGroups is empty
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Invalid Guarding Period", style: TextStyle(color: Color.fromARGB(255, 255, 196, 0))),
+            content: Text("Please make sure you enter a guarding period that is long enough to assign a guard."),
+            actions: <Widget>[
+              TextButton(
+                child: Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Dismiss the dialog
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      Navigator.pop(context); // Close the modal if guardGroups is not empty
+    }
   }
+
 
   void _showSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(

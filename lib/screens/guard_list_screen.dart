@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import '../widgets/snack_bar_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:maazin_app/widgets/generate_list_modal.dart'; // Import the GenerateListModal class
@@ -157,22 +157,6 @@ class _GuardListScreenState extends State<GuardListScreen>
     }
   }
 
-
-  void _showSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Padding(
-          padding: const EdgeInsets.only(bottom: 25.0),
-          child: Center(child: Text(message)),
-        ),
-        duration: Duration(seconds: 2),
-        backgroundColor: Theme.of(context).colorScheme.secondary,
-        behavior: SnackBarBehavior.fixed,
-        elevation: 30,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -198,7 +182,7 @@ class _GuardListScreenState extends State<GuardListScreen>
           _buildGlowingFAB(Icons.copy, () {
             Clipboard.setData(
                 ClipboardData(text: guardGroupsList.getReadableList()));
-            _showSnackBar(context, 'Copied!');
+            SnackbarUtil.showSnackBar(context, 'List Copied!');
           }, scheme.secondary),
           SizedBox(width: 16),
           _buildGlowingFAB(Icons.share_sharp, () {

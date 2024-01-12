@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/assigned_team_member.dart';
+import 'guard_group_tile.dart'; // Import the new tile widget
 import '../date_formatter.dart';
 
 class GuardGroupsList extends StatelessWidget {
@@ -10,20 +11,26 @@ class GuardGroupsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var scheme = Theme.of(context).colorScheme;
-    Color invPrimaryColor = scheme.inversePrimary;
-    Color primaryColor = scheme.primary;
-    var isEmpty = guardGroups.isEmpty;
-
-    var listWidget = _getListWidget(isEmpty, primaryColor, invPrimaryColor);
-
+    
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: listWidget
+      child: guardGroups.isEmpty
+          ? _buildNoListWidget()
+          : ListView.builder(
+              itemCount: guardGroups.length,
+              itemBuilder: (context, index) {
+                return GuardGroupTile(
+                  groupMembers: guardGroups[index],
+                  colorScheme: scheme,
+                );
+              },
+            ),
     );
   }
 
-  Widget _getListWidget(bool isEmpty, Color primary, Color inversePrimary) {
-    var noListTextColumn = const Card(child: Column(
+  Widget _buildNoListWidget() {
+    return const Card(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -31,68 +38,17 @@ class GuardGroupsList extends StatelessWidget {
             padding: EdgeInsets.all(10),
             child: Center(
               child: Text("No list yet..", style: TextStyle(fontSize: 15))
-          )),
+            )
+          ),
           Padding(
             padding: EdgeInsets.all(10), 
             child: Center(
-              child: Text("press the + button to generate a list", style: TextStyle(fontSize: 15))
-          )),
+              child: Text("Press the + button to generate a list", style: TextStyle(fontSize: 15))
+            )
+          ),
         ],
-    ));
-
-    var widget = isEmpty ? 
-      noListTextColumn : 
-      ListView.builder(
-        itemCount: guardGroups.length,
-        itemBuilder: (context, index) {
-          return Card(
-            child: ListTile(
-              title: Wrap(
-                children: [
-                  ...guardGroups[index].map(
-                    (e) => FittedBox(
-                      child: Container(
-                        height: 50.0, // Adjust the height as needed
-                        child: Card(
-                          elevation: 3,
-                          color: inversePrimary,
-                          child: Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Text(e.name),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  FittedBox(
-                    child: Container(
-                      height: 50.0, // Adjust the height as needed
-                      child: Card(
-                        color: primary,
-                        elevation: 3,
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Text(
-                              '${DateFormatter.formatTime(guardGroups[index][0].startTime)} - ${DateFormatter.formatTime(guardGroups[index][0].endTime)}',
-                              style: TextStyle(color: inversePrimary),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              // Add more details or actions as needed
-            ),
-          );
-        },
-      );
-
-      return widget;
+      ),
+    );
   }
 
   String getReadableList() {

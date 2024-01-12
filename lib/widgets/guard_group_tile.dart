@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../models/assigned_team_member.dart';
 import '../date_formatter.dart';
-import '../widgets/snack_bar_util.dart';
+import '../utils/snack_bar_util.dart';
 
 class GuardGroupTile extends StatefulWidget {
   final List<AssignedTeamMember> groupMembers;

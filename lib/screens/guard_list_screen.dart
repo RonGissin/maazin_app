@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:maazin_app/widgets/generate_list_modal.dart'; // Import the GenerateListModal class
@@ -32,7 +34,7 @@ class _GuardListScreenState extends State<GuardListScreen>
   bool isFixedGuardTime = false;
   bool isAppBarVisible = true;
   late AnimationController _controller;
-  late Animation<Offset> _offsetAnimation;
+  double _glowRadius = 1.0;
 
   @override
   void initState() {
@@ -41,16 +43,40 @@ class _GuardListScreenState extends State<GuardListScreen>
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-
-    _offsetAnimation = Tween<Offset>(
-      begin: Offset.zero,
-      end: const Offset(0.0, 1.0),
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    _startGlowAnimation();
   }
 
+  void _startGlowAnimation() {
+    // Repeat the animation
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        _glowRadius = _glowRadius == 1.0 ? 6.0 : 1.0; // Toggle the glow radius
+      });
+    });
+  }
+
+  Widget _buildGlowingFAB(IconData icon, VoidCallback onPressed, Color glowColor) {
+    return AnimatedContainer(
+      duration: Duration(seconds: 1),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        shape: BoxShape.rectangle,
+        boxShadow: [
+          BoxShadow(
+            color: const Color.fromARGB(255, 167, 235, 89).withOpacity(0.5),
+            spreadRadius: _glowRadius,
+            blurRadius: 5,
+            offset: Offset(0.0, 0.0), // changes position of shadow
+          ),
+        ],
+      ),
+      child: FloatingActionButton(
+        onPressed: onPressed,
+        child: Icon(icon),
+      ),
+    );
+  }
+  
   @override
   void dispose() {
     _controller.dispose();
@@ -148,22 +174,16 @@ class _GuardListScreenState extends State<GuardListScreen>
           ),
         ]
       : [
-          FloatingActionButton(
-            onPressed: () {
-              Clipboard.setData(
-                  ClipboardData(text: guardGroupsList.getReadableList()));
-              _showSnackBar(context, 'Copied!');
-            },
-            child: const Icon(Icons.copy),
-          ),
+          _buildGlowingFAB(Icons.copy, () {
+            Clipboard.setData(
+                ClipboardData(text: guardGroupsList.getReadableList()));
+            _showSnackBar(context, 'Copied!');
+          }, scheme.secondary),
           SizedBox(width: 16),
-          FloatingActionButton(
-            onPressed: () {
-              final String readableList = guardGroupsList.getReadableList();
-              Share.share(readableList);
-            },
-            child: const Icon(Icons.share_sharp),
-          ),
+          _buildGlowingFAB(Icons.share_sharp, () {
+            final String readableList = guardGroupsList.getReadableList();
+            Share.share(readableList);
+          }, scheme.secondary),
           SizedBox(width: 16),
           FloatingActionButton(
             onPressed: () {

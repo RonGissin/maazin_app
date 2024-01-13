@@ -114,70 +114,106 @@ class _GuardListScreenState extends State<GuardListScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-  var scheme = Theme.of(context).colorScheme;
-  teamMembers = Provider.of<TeamProvider>(context).teamMembers;
-  guardGroupsList = GuardGroupsList(guardGroups: guardGroups);
+    var scheme = Theme.of(context).colorScheme;
+    teamMembers = Provider.of<TeamProvider>(context).teamMembers;
+    guardGroupsList = GuardGroupsList(guardGroups: guardGroups);
 
-  List<Widget> fabWidgets = guardGroups.isEmpty 
-    ? [      FloatingActionButton(        onPressed: () {          _showGenerateListModal(              context,              selectedStartTime,              selectedEndTime,              (time) => setState(() => selectedStartTime = time),              (time) => setState(() => selectedEndTime = time));        },        child: const Icon(Icons.add),      ),    ]
-    : [      FloatingActionButton(        onPressed: () {          Clipboard.setData(              ClipboardData(text: guardGroupsList.getReadableList()));          SnackbarUtil.showSnackBar(context, 'List Copied!');        },        child: const Icon(Icons.copy),      ),      SizedBox(width: 16),      FloatingActionButton(        onPressed: () {          final String readableList = guardGroupsList.getReadableList();          Share.share(readableList);        },        child: const Icon(Icons.share_sharp),      ),      SizedBox(width: 16),      FloatingActionButton(        onPressed: () {          _showGenerateListModal(              context,              selectedStartTime,              selectedEndTime,              (time) => setState(() => selectedStartTime = time),              (time) => setState(() => selectedEndTime = time));        },        child: const Icon(Icons.edit),      ),    ];
+    List<Widget> fabWidgets = guardGroups.isEmpty 
+      ? [
+          FloatingActionButton(
+            onPressed: () {
+              _showGenerateListModal(
+                context,
+                selectedStartTime,
+                selectedEndTime, 
+                (time) => setState(() => selectedStartTime = time), 
+                (time) => setState(() => selectedEndTime = time));
+            },
+            child: const Icon(Icons.add)),
+        ]
+      : [      
+          FloatingActionButton(
+            onPressed: () { 
+              Clipboard.setData(ClipboardData(text: guardGroupsList.getReadableList()));
+              SnackbarUtil.showSnackBar(context, 'List Copied!'); 
+            },
+            child: const Icon(Icons.copy)),
+            SizedBox(width: 16),      
+          FloatingActionButton(
+            onPressed: () {
+              final String readableList = guardGroupsList.getReadableList();
+              Share.share(readableList);        
+            },        
+            child: const Icon(Icons.share_sharp)),
+            SizedBox(width: 16),      
+            FloatingActionButton(        
+              onPressed: () {          
+                _showGenerateListModal(              
+                  context,              
+                  selectedStartTime,              
+                  selectedEndTime,              
+                  (time) => setState(() => selectedStartTime = time),              
+                  (time) => setState(() => selectedEndTime = time));        
+              },        
+              child: const Icon(Icons.edit)),
+        ];
 
-  return Scaffold(
-    appBar: AppBar(
-      title: Text(
-        'Guard List',
-        style: TextStyle(color: scheme.secondary),
-      ),
-    ),
-    body: NotificationListener<UserScrollNotification>(
-      onNotification: (notification) {
-        if (guardGroups.isEmpty) {
-          setState(() => isAppBarVisible = true);
-        } else {
-          if (notification.direction == ScrollDirection.reverse) {
-            if (isAppBarVisible) setState(() => isAppBarVisible = false);
-          } else if (notification.direction == ScrollDirection.forward) {
-            if (!isAppBarVisible) setState(() => isAppBarVisible = true);
-          }
-        }
-        return true;
-      },
-      child: Stack(
-        children: [
-          guardGroupsList, // Full screen height
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: AnimatedOpacity(
-              opacity: isAppBarVisible ? 1.0 : 0.0,
-              duration: Duration(milliseconds: 300),
-              child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                    border: Border.all(
-                      color: scheme.primary,
-                      width: 3.0,
-                    ),
-                  ), 
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                    child: BottomAppBar(
-                      notchMargin: 4.0,
-                      elevation: 4.0,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: fabWidgets,
-                        ),
-                      ),
-                    ),
-                )),
-            ),
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Guard List',
+            style: TextStyle(color: scheme.secondary),
           ),
-        ],
-      ),
-    ),
-  );
-  }
+        ),
+        body: NotificationListener<UserScrollNotification>(
+          onNotification: (notification) {
+            if (guardGroups.isEmpty) {
+              setState(() => isAppBarVisible = true);
+            } else {
+              if (notification.direction == ScrollDirection.reverse) {
+                if (isAppBarVisible) setState(() => isAppBarVisible = false);
+              } else if (notification.direction == ScrollDirection.forward) {
+                if (!isAppBarVisible) setState(() => isAppBarVisible = true);
+              }
+            }
+            return true;
+          },
+          child: Stack(
+            children: [
+              guardGroupsList, // Full screen height
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: AnimatedOpacity(
+                  opacity: isAppBarVisible ? 1.0 : 0.0,
+                  duration: Duration(milliseconds: 300),
+                  child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                        border: Border.all(
+                          color: scheme.primary,
+                          width: 3.0,
+                        ),
+                      ), 
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                        child: BottomAppBar(
+                          notchMargin: 4.0,
+                          elevation: 4.0,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: fabWidgets,
+                            ),
+                          ),
+                        ),
+                    )),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 }
 

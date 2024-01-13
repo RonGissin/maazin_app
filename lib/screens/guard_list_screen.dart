@@ -237,7 +237,7 @@ class _GuardListScreenState extends State<GuardListScreen>
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                       border: Border.all(
-                        color: scheme.secondary,
+                        color: scheme.primary,
                         width: 3.0,
                       ),
                     ), 

@@ -1,6 +1,5 @@
 import 'package:maazin_app/models/assigned_team_member.dart';
 import 'package:maazin_app/models/team_member.dart';
-import 'dart:math';
 
 const int roundToInMinutes = 5;
 

@@ -53,6 +53,22 @@ class _GuardGroupsListState extends State<GuardGroupsList> {
                   if (newIndex > oldIndex) {
                     newIndex -= 1;
                   }
+
+                  // Swap the start and end times
+                  DateTime oldStartTime = widget.guardGroups[oldIndex][0].startTime;
+                  DateTime oldEndTime = widget.guardGroups[oldIndex][0].endTime;
+
+                  widget.guardGroups[oldIndex].forEach((member) {
+                    member.startTime = widget.guardGroups[newIndex][0].startTime;
+                    member.endTime = widget.guardGroups[newIndex][0].endTime;
+                  });
+
+                  widget.guardGroups[newIndex].forEach((member) {
+                    member.startTime = oldStartTime;
+                    member.endTime = oldEndTime;
+                  });
+
+                  // Swap the groups in the list
                   final item = widget.guardGroups.removeAt(oldIndex);
                   widget.guardGroups.insert(newIndex, item);
                 });

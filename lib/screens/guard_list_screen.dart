@@ -186,30 +186,21 @@ class _GuardListScreenState extends State<GuardListScreen>
                 child: AnimatedOpacity(
                   opacity: isAppBarVisible ? 1.0 : 0.0,
                   duration: Duration(milliseconds: 300),
-                  child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                        border: Border.all(
-                          color: scheme.primary,
-                          width: 3.0,
-                        ),
-                      ), 
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                        child: BottomAppBar(
-                          notchMargin: 4.0,
-                          elevation: 4.0,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: fabWidgets,
-                            ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                      child: BottomAppBar(
+                        notchMargin: 4.0,
+                        elevation: 10.0,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: fabWidgets,
                           ),
                         ),
-                    )),
+                      ),
+                  )),
                 ),
-              ),
             ],
           ),
         ),

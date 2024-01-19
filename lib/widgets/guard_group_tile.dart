@@ -16,30 +16,24 @@ class GuardGroupTile extends StatefulWidget {
   _GuardGroupTileState createState() => _GuardGroupTileState();
 }
 
-class _GuardGroupTileState extends State<GuardGroupTile> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+class _GuardGroupTileState extends State<GuardGroupTile> {
+  bool _isPressed = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 200),
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  void _updatePressedState(bool isPressed) {
+    setState(() {
+      _isPressed = isPressed;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return ReorderableDelayedDragStartListener(
       index: widget.groupMembers.indexOf(widget.groupMembers.first),
-      child: FadeTransition(
-        opacity: Tween(begin: 1.0, end: 0.5).animate(_controller),
+      child: InkWell(
+        onTap: () {}, // Implement onTap logic if needed
+        onTapDown: (_) => _updatePressedState(true),
+        onTapUp: (_) => _updatePressedState(false),
+        onTapCancel: () => _updatePressedState(false),
         child: Card(
           child: ListTile(
             title: Wrap(
@@ -87,3 +81,4 @@ class _GuardGroupTileState extends State<GuardGroupTile> with SingleTickerProvid
     );
   }
 }
+

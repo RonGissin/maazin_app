@@ -54,21 +54,20 @@ class _GuardGroupsListState extends State<GuardGroupsList> {
                     newIndex -= 1;
                   }
 
-                  // Swap the start and end times
-                  DateTime oldStartTime = widget.guardGroups[oldIndex][0].startTime;
-                  DateTime oldEndTime = widget.guardGroups[oldIndex][0].endTime;
+                  final List<AssignedTeamMember> movingGroup = List.from(widget.guardGroups[oldIndex]);
+                  final DateTime movingGroupStartTime = movingGroup[0].startTime;
+                  final DateTime movingGroupEndTime = movingGroup[0].endTime;
 
-                  widget.guardGroups[oldIndex].forEach((member) {
-                    member.startTime = widget.guardGroups[newIndex][0].startTime;
-                    member.endTime = widget.guardGroups[newIndex][0].endTime;
-                  });
+                  if (newIndex < oldIndex) {
+                    for (int i = newIndex; i < oldIndex; i++) {
+                      _swapGroupTimes(movingGroup, widget.guardGroups[i]);
+                    }
+                  } else {
+                    for (int i = oldIndex + 1; i <= newIndex; i++) {
+                      _swapGroupTimes(movingGroup, widget.guardGroups[i]);
+                    }
+                  }
 
-                  widget.guardGroups[newIndex].forEach((member) {
-                    member.startTime = oldStartTime;
-                    member.endTime = oldEndTime;
-                  });
-
-                  // Swap the groups in the list
                   final item = widget.guardGroups.removeAt(oldIndex);
                   widget.guardGroups.insert(newIndex, item);
                 });
@@ -100,4 +99,17 @@ class _GuardGroupsListState extends State<GuardGroupsList> {
     );
   }
 }
+
+void _swapGroupTimes(List<AssignedTeamMember> groupA, List<AssignedTeamMember> groupB) {
+    DateTime tempStartTime = groupA[0].startTime;
+    DateTime tempEndTime = groupA[0].endTime;
+    groupA.forEach((member) {
+      member.startTime = groupB[0].startTime;
+      member.endTime = groupB[0].endTime;
+    });
+    groupB.forEach((member) {
+      member.startTime = tempStartTime;
+      member.endTime = tempEndTime;
+    });
+  }
 

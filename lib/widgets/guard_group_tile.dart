@@ -29,13 +29,14 @@ class _GuardGroupTileState extends State<GuardGroupTile> {
   Widget build(BuildContext context) {
     return ReorderableDelayedDragStartListener(
       index: widget.groupMembers.indexOf(widget.groupMembers.first),
-      child: InkWell(
-        onTap: () {}, // Implement onTap logic if needed
-        onTapDown: (_) => _updatePressedState(true),
-        onTapUp: (_) => _updatePressedState(false),
-        onTapCancel: () => _updatePressedState(false),
-        child: Card(
-          child: ListTile(
+      child: Card(
+          child: InkWell(
+            onTap: () {}, // Implement onTap logic if needed
+            onTapDown: (_) => _updatePressedState(true),
+            onTapUp: (_) => _updatePressedState(false),
+            onTapCancel: () => _updatePressedState(false),
+            borderRadius: BorderRadius.circular(10),
+            child: ListTile(
             title: Wrap(
               children: [
                 ...widget.groupMembers.map(

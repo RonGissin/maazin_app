@@ -21,9 +21,7 @@ class _GuardGroupsListState extends State<GuardGroupsList> {
     
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: widget.guardGroups.isEmpty
-          ? _buildNoListWidget()
-          : ReorderableListView.builder(
+      child: ReorderableListView.builder(
               itemCount: widget.guardGroups.length,
               itemBuilder: (context, index) {
                 return GuardGroupTile(
@@ -61,29 +59,6 @@ class _GuardGroupsListState extends State<GuardGroupsList> {
             ),
     );
   }
-
-  Widget _buildNoListWidget() {
-    return const Card(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: EdgeInsets.all(10),
-            child: Center(
-              child: Text("No list yet..", style: TextStyle(fontSize: 15))
-            )
-          ),
-          Padding(
-            padding: EdgeInsets.all(10), 
-            child: Center(
-              child: Text("Press the + button to generate a list", style: TextStyle(fontSize: 15))
-            )
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 void _swapGroupTimes(List<AssignedTeamMember> groupA, List<AssignedTeamMember> groupB) {
@@ -94,7 +69,7 @@ void _swapGroupTimes(List<AssignedTeamMember> groupA, List<AssignedTeamMember> g
       member.startTime = groupB[0].startTime;
       member.endTime = groupB[0].endTime;
     });
-    
+
     groupB.forEach((member) {
       member.startTime = tempStartTime;
       member.endTime = tempEndTime;

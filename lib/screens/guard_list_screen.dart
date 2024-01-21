@@ -113,7 +113,7 @@ class _GuardListScreenState extends State<GuardListScreen>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Guard List',
+          '${guardGroups.isEmpty ? 'Create a ' : 'Edit '}Guard List',
           style: TextStyle(color: scheme.secondary),
         ),
       ),
@@ -132,7 +132,16 @@ class _GuardListScreenState extends State<GuardListScreen>
         },
         child: Stack(
           children: [
-            guardGroupsList,
+              Column(
+                children: guardGroups.isEmpty ? 
+                  [ 
+                      _buildNoListWidget() 
+                  ] :
+                  [
+                    _buildClearButton(context),
+                    Expanded(child: guardGroupsList),
+                  ]
+              ),
             Align(
               alignment: Alignment.bottomCenter,
               child: GuardListScreenBottomAppBar(
@@ -153,3 +162,70 @@ class _GuardListScreenState extends State<GuardListScreen>
       ),
     );
   }}
+
+  Widget _buildNoListWidget() {
+    return const Card(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: Center(
+              child: Text("No list yet..", style: TextStyle(fontSize: 15))
+            )
+          ),
+          Padding(
+            padding: EdgeInsets.all(10), 
+            child: Center(
+              child: Text("Press the + button to generate a list", style: TextStyle(fontSize: 15))
+            )
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildClearButton(BuildContext context) {
+  return Padding(
+    padding: EdgeInsets.symmetric(vertical: 8.0),
+    child: OutlinedButton.icon(
+      onPressed: () {
+        _showClearConfirmationDialog(context);
+        // Provider.of<GuardGroupsProvider>(context, listen: false).updateGuardGroups([]);
+      },
+      icon: Icon(Icons.recycling, size: 20.0),
+      label: Text("Clear"),
+      style: OutlinedButton.styleFrom(
+        side: BorderSide(color: Theme.of(context).colorScheme.primary), // Border color
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), // Rounded corners
+      ),
+    ),
+  );
+}
+
+void _showClearConfirmationDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        content: Text("Are you sure you want to clear the guard list?"),
+        actions: <Widget>[
+          TextButton(
+            child: Text("Cancel"),
+            onPressed: () {
+              Navigator.of(context).pop(); // Dismiss the dialog
+            },
+          ),
+          TextButton(
+            child: Text("Clear"),
+            onPressed: () {
+              Provider.of<GuardGroupsProvider>(context, listen: false).updateGuardGroups([]);
+              Navigator.of(context).pop(); // Dismiss the dialog
+            },
+          ),
+        ],
+      );
+    },
+  );
+}

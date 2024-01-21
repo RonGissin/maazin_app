@@ -116,11 +116,11 @@ class _GenerateListModalState extends State<GenerateListModal> {
               });
             },
           ),
-          const SizedBox(height: 20.0),
+          const SizedBox(height: 25.0),
           Row(
             children: [
               Padding(
-                padding: EdgeInsets.only(right: 10.0),
+                padding: EdgeInsets.only(right: 10.0, left: 5.0),
                 child: Switch(
                   value: isFixedGuardTime,
                   onChanged: (value) {

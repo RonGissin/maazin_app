@@ -2,24 +2,27 @@ import 'package:flutter/material.dart';
 
 class NumberOfGuardsInput extends StatefulWidget {
   final ValueChanged<int> onChanged;
-  int initialState = 1;
+  final int initialState;
 
   NumberOfGuardsInput({required this.onChanged, required this.initialState});
 
   @override
-  _NumberOfGuardsInputState createState() => _NumberOfGuardsInputState(initialState);
+  _NumberOfGuardsInputState createState() => _NumberOfGuardsInputState();
 }
 
 class _NumberOfGuardsInputState extends State<NumberOfGuardsInput> {
-  _NumberOfGuardsInputState(int intitialState)
-  {
-    selectedValue = intitialState;
-  }
+  late int selectedValue;
 
-  int selectedValue = 1;
+  @override
+  void initState() {
+    super.initState();
+    selectedValue = widget.initialState;
+  }
 
   @override
   Widget build(BuildContext context) {
+    var scheme = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -30,43 +33,28 @@ class _NumberOfGuardsInputState extends State<NumberOfGuardsInput> {
             style: TextStyle(fontSize: 16.0),
         )),
         Row(
-          children: [
-            Radio(
-              value: 1,
-              groupValue: selectedValue,
-              onChanged: (value) {
-                setState(() {
-                  selectedValue = value as int;
-                  widget.onChanged(selectedValue);
-                });
-              },
-            ),
-            const Text('1'),
-            Radio(
-              value: 2,
-              groupValue: selectedValue,
-              onChanged: (value) {
-                setState(() {
-                  selectedValue = value as int;
-                  widget.onChanged(selectedValue);
-                });
-              },
-            ),
-            const Text('2'),
-            Radio(
-              value: 3,
-              groupValue: selectedValue,
-              onChanged: (value) {
-                setState(() {
-                  selectedValue = value as int;
-                  widget.onChanged(selectedValue);
-                });
-              },
-            ),
-            const Text('3'),
-          ],
+          children: List.generate(3, (index) => _buildButton(index + 1, scheme)),
         ),
       ],
+    );
+  }
+
+  Widget _buildButton(int value, ColorScheme scheme) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 10, top: 10),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: selectedValue == value ? scheme.primary : Colors.grey, // Active color
+          foregroundColor: scheme.onPrimary, // Text color
+        ),
+        onPressed: () {
+          setState(() {
+            selectedValue = value;
+            widget.onChanged(selectedValue);
+          });
+        },
+        child: Text('$value'),
+      ),
     );
   }
 }

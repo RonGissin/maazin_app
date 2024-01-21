@@ -4,6 +4,7 @@ import 'package:share/share.dart';
 import '../../models/assigned_team_member.dart';
 import '../../utils/snack_bar_util.dart';
 import '../../utils/whatsapp_guard_list_formatter.dart';
+import '../outlined_floating_action_button.dart';
 
 class GuardListScreenBottomAppBar extends StatelessWidget {
   final bool isAppBarVisible;
@@ -40,33 +41,35 @@ class GuardListScreenBottomAppBar extends StatelessWidget {
   }
 
   List<Widget> _buildFabWidgets(BuildContext context) {
+    var scheme = Theme.of(context).colorScheme;
+
     return guardGroups.isEmpty
       ? [
-          FloatingActionButton(
+          OutlinedFloatingActionButton(
             onPressed: onAddOrEditPressed,
-            child: const Icon(Icons.add),
-          ),
+            icon: Icons.add,
+          )
         ]
       : [
-          FloatingActionButton(
+          OutlinedFloatingActionButton(
             onPressed: () {
               Clipboard.setData(ClipboardData(text: WhatsappGuardListFormatter.ListToString(guardGroups)));
               SnackbarUtil.showSnackBar(context, 'List Copied!');
             },
-            child: const Icon(Icons.copy),
+            icon: Icons.copy,
           ),
           const SizedBox(width: 16),
-          FloatingActionButton(
+          OutlinedFloatingActionButton(
             onPressed: () {
               final String readableList = WhatsappGuardListFormatter.ListToString(guardGroups);
               Share.share(readableList);
             },
-            child: const Icon(Icons.share_sharp),
+            icon: Icons.share_sharp,
           ),
           const SizedBox(width: 16),
-          FloatingActionButton(
+          OutlinedFloatingActionButton(
             onPressed: onAddOrEditPressed,
-            child: const Icon(Icons.edit),
+            icon: Icons.edit,
           ),
         ];
   }

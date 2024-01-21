@@ -1,13 +1,14 @@
+import '../providers/guard_groups_provider.dart';
 import '../utils/snack_bar_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:maazin_app/widgets/generate_list_modal.dart';
-import 'package:maazin_app/guard_list_generator.dart';
-import 'package:maazin_app/models/assigned_team_member.dart';
-import 'package:maazin_app/models/team_member.dart';
-import 'package:maazin_app/widgets/guard_groups_list.dart';
+import '../widgets/generate_list_modal.dart';
+import '../guard_list_generator.dart';
+import '../models/assigned_team_member.dart';
+import '../models/team_member.dart';
+import '../widgets/guard_groups_list.dart';
 import 'package:provider/provider.dart';
-import 'package:maazin_app/team_provider.dart';
+import '../providers/team_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:share/share.dart';
 
@@ -86,6 +87,9 @@ class _GuardListScreenState extends State<GuardListScreen>
         endTime,
         isFixedGuardTime ? guardTime : null,
       );
+
+      Provider.of<GuardGroupsProvider>(context, listen: false)
+        .updateGuardGroups(guardGroups);
     });
 
     if (guardGroups.isEmpty) {
@@ -116,7 +120,8 @@ class _GuardListScreenState extends State<GuardListScreen>
     super.build(context);
     var scheme = Theme.of(context).colorScheme;
     teamMembers = Provider.of<TeamProvider>(context).teamMembers;
-    guardGroupsList = GuardGroupsList(guardGroups: guardGroups);
+    guardGroups = Provider.of<GuardGroupsProvider>(context).guardGroups;
+    guardGroupsList = GuardGroupsList();
 
     List<Widget> fabWidgets = guardGroups.isEmpty 
       ? [

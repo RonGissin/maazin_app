@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../team_provider.dart';
+import '../providers/team_provider.dart';
 import '../models/team_member.dart';
 import '../widgets/modify_team_member_dialog.dart';
 

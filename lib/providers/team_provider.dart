@@ -1,7 +1,7 @@
 import 'dart:convert'; // Import the dart:convert library
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'models/team_member.dart';
+import '../models/team_member.dart';
 import 'package:flutter/widgets.dart';
 
 class TeamProvider extends ChangeNotifier with WidgetsBindingObserver{

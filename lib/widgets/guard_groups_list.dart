@@ -1,12 +1,16 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../models/assigned_team_member.dart';
-import 'guard_group_tile.dart'; // Import the new tile widget
+import '../providers/guard_groups_provider.dart';
+import 'guard_group_tile.dart';
 import '../date_formatter.dart';
 
 class GuardGroupsList extends StatefulWidget {
-  final List<List<AssignedTeamMember>> guardGroups;
+  List<List<AssignedTeamMember>> guardGroups = [];
 
-  const GuardGroupsList({Key? key, required this.guardGroups}) : super(key: key);
+  GuardGroupsList({Key? key}) : super(key: key);
 
   String getReadableList() {
     StringBuffer formattedList = StringBuffer();
@@ -34,6 +38,7 @@ class _GuardGroupsListState extends State<GuardGroupsList> {
   @override
   Widget build(BuildContext context) {
     var scheme = Theme.of(context).colorScheme;
+    widget.guardGroups = Provider.of<GuardGroupsProvider>(context).guardGroups;
     
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -50,26 +55,28 @@ class _GuardGroupsListState extends State<GuardGroupsList> {
               },
               onReorder: (oldIndex, newIndex) {
                 setState(() {
+                  // Adjust for the removal of the item
                   if (newIndex > oldIndex) {
                     newIndex -= 1;
                   }
 
-                  final List<AssignedTeamMember> movingGroup = List.from(widget.guardGroups[oldIndex]);
-                  final DateTime movingGroupStartTime = movingGroup[0].startTime;
-                  final DateTime movingGroupEndTime = movingGroup[0].endTime;
+                  // Move the item in the list
+                  final item = widget.guardGroups.removeAt(oldIndex);
+                  widget.guardGroups.insert(newIndex, item);
 
+                  // Swap times logic
                   if (newIndex < oldIndex) {
                     for (int i = newIndex; i < oldIndex; i++) {
-                      _swapGroupTimes(movingGroup, widget.guardGroups[i]);
+                      _swapGroupTimes(widget.guardGroups[i], widget.guardGroups[i + 1]);
                     }
                   } else {
-                    for (int i = oldIndex + 1; i <= newIndex; i++) {
-                      _swapGroupTimes(movingGroup, widget.guardGroups[i]);
+                    for (int i = newIndex; i > oldIndex; i--) {
+                      _swapGroupTimes(widget.guardGroups[i], widget.guardGroups[i - 1]);
                     }
                   }
 
-                  final item = widget.guardGroups.removeAt(oldIndex);
-                  widget.guardGroups.insert(newIndex, item);
+                  Provider.of<GuardGroupsProvider>(context, listen: false)
+                      .updateGuardGroups(widget.guardGroups);
                 });
               },
             ),

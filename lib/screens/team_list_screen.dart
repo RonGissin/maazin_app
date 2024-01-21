@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:maazin_app/models/team_member.dart';
 import 'package:provider/provider.dart';
 import '../widgets/team_list.dart';
-import '../team_provider.dart';
+import '../providers/team_provider.dart';
 import '../widgets/modify_team_member_dialog.dart';
 
 class TeamListScreen extends StatelessWidget {

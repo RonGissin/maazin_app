@@ -41,8 +41,6 @@ class GuardListScreenBottomAppBar extends StatelessWidget {
   }
 
   List<Widget> _buildFabWidgets(BuildContext context) {
-    var scheme = Theme.of(context).colorScheme;
-
     return guardGroups.isEmpty
       ? [
           OutlinedFloatingActionButton(

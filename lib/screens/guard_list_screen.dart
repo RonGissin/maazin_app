@@ -187,9 +187,7 @@ class _GuardListScreenState extends State<GuardListScreen>
   }
 
   Widget _buildClearButton(BuildContext context) {
-  return Padding(
-    padding: EdgeInsets.symmetric(vertical: 8.0),
-    child: OutlinedButton.icon(
+  return OutlinedButton.icon(
       onPressed: () {
         _showClearConfirmationDialog(context);
         // Provider.of<GuardGroupsProvider>(context, listen: false).updateGuardGroups([]);
@@ -200,8 +198,7 @@ class _GuardListScreenState extends State<GuardListScreen>
         side: BorderSide(color: Theme.of(context).colorScheme.primary), // Border color
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), // Rounded corners
       ),
-    ),
-  );
+    );
 }
 
 void _showClearConfirmationDialog(BuildContext context) {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/team_member.dart';
+import '../../models/team_member.dart';
 
 class ModifyTeamMemberDialog extends StatefulWidget {
   final List<TeamMember> teamMembers;
@@ -21,7 +21,7 @@ class ModifyTeamMemberDialog extends StatefulWidget {
 }
 
 class _ModifyTeamMemberDialogState extends State<ModifyTeamMemberDialog> {
-  TextEditingController _controller = TextEditingController();
+  final TextEditingController _controller = TextEditingController();
   bool _showEmptyError = false;
   bool _showNameExistsError = false;
 

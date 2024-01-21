@@ -23,10 +23,12 @@ class _NumberOfGuardsInputState extends State<NumberOfGuardsInput> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Number of Guards',
-          style: TextStyle(fontSize: 16.0),
-        ),
+        const Padding(
+          padding: EdgeInsets.only(left: 10),
+          child: Text(
+            'Number of Guards',
+            style: TextStyle(fontSize: 16.0),
+        )),
         Row(
           children: [
             Radio(

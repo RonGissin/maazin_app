@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import './datetime_picker.dart';
-import './number_of_guards_input.dart';
+import '../datetime_picker.dart';
+import 'number_of_guards_input.dart';
 import 'package:flutter/cupertino.dart';
 
 class GenerateListModal extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/assigned_team_member.dart';
-import '../date_formatter.dart';
+import '../../models/assigned_team_member.dart';
+import '../../utils/date_formatter.dart';
 
 class GuardGroupTile extends StatefulWidget {
   final List<AssignedTeamMember> groupMembers;
@@ -17,13 +17,6 @@ class GuardGroupTile extends StatefulWidget {
 }
 
 class _GuardGroupTileState extends State<GuardGroupTile> {
-  bool _isPressed = false;
-
-  void _updatePressedState(bool isPressed) {
-    setState(() {
-      _isPressed = isPressed;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +25,6 @@ class _GuardGroupTileState extends State<GuardGroupTile> {
       child: Card(
           child: InkWell(
             onTap: () {}, // Implement onTap logic if needed
-            onTapDown: (_) => _updatePressedState(true),
-            onTapUp: (_) => _updatePressedState(false),
-            onTapCancel: () => _updatePressedState(false),
             borderRadius: BorderRadius.circular(10),
             child: ListTile(
             title: Wrap(

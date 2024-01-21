@@ -1,34 +1,13 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/assigned_team_member.dart';
-import '../providers/guard_groups_provider.dart';
+import '../../models/assigned_team_member.dart';
+import '../../providers/guard_groups_provider.dart';
 import 'guard_group_tile.dart';
-import '../date_formatter.dart';
 
 class GuardGroupsList extends StatefulWidget {
   List<List<AssignedTeamMember>> guardGroups = [];
 
   GuardGroupsList({Key? key}) : super(key: key);
-
-  String getReadableList() {
-    StringBuffer formattedList = StringBuffer();
-    formattedList.writeln('*Guard List*'); // WhatsApp markdown for bold text
-
-    for (int i = 0; i < guardGroups.length; i++) {
-      formattedList.write('- ');
-      for (int j = 0; j < guardGroups[i].length; j++) {
-        formattedList.write('${guardGroups[i][j].name}');
-        if (j < guardGroups[i].length - 1) {
-          formattedList.write(', ');
-        }
-      }
-      formattedList.write(' - ${DateFormatter.formatTime(guardGroups[i][0].startTime)} to ${DateFormatter.formatTime(guardGroups[i][0].endTime)}\n');
-    }
-
-    return formattedList.toString();
-  }
 
   @override
   _GuardGroupsListState createState() => _GuardGroupsListState();
@@ -110,13 +89,15 @@ class _GuardGroupsListState extends State<GuardGroupsList> {
 void _swapGroupTimes(List<AssignedTeamMember> groupA, List<AssignedTeamMember> groupB) {
     DateTime tempStartTime = groupA[0].startTime;
     DateTime tempEndTime = groupA[0].endTime;
+
     groupA.forEach((member) {
       member.startTime = groupB[0].startTime;
       member.endTime = groupB[0].endTime;
     });
+    
     groupB.forEach((member) {
       member.startTime = tempStartTime;
       member.endTime = tempEndTime;
     });
-  }
+}
 

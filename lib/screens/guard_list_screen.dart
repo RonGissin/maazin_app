@@ -1,16 +1,13 @@
-import '../providers/guard_groups_provider.dart';
-import '../utils/snack_bar_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import '../widgets/generate_list_modal.dart';
-import '../guard_list_generator.dart';
-import '../models/assigned_team_member.dart';
-import '../models/team_member.dart';
-import '../widgets/guard_groups_list.dart';
 import 'package:provider/provider.dart';
+import '../models/assigned_team_member.dart';
+import '../guard_list_generator.dart';
+import '../widgets/guard_list/generate_list_modal.dart';
+import '../widgets/guard_list/guard_groups_list.dart';
 import '../providers/team_provider.dart';
-import 'package:flutter/services.dart';
-import 'package:share/share.dart';
+import '../providers/guard_groups_provider.dart';
+import '../widgets/guard_list/guard_list_screen_bottom_app_bar.dart';
 
 class GuardListScreen extends StatefulWidget {
   const GuardListScreen({Key? key}) : super(key: key);
@@ -20,18 +17,11 @@ class GuardListScreen extends StatefulWidget {
 }
 
 class _GuardListScreenState extends State<GuardListScreen>
-    with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
-  List<List<AssignedTeamMember>> guardGroups = [];
-  List<TeamMember> teamMembers = [];
+    with AutomaticKeepAliveClientMixin {
   GuardListGenerator generator = GuardListGenerator();
-  int numberOfConcurrentGuards = 1;
-  late GuardGroupsList guardGroupsList;
   DateTime selectedStartTime = DateTime.now();
   DateTime selectedEndTime = DateTime.now();
   bool isInvalidTime = false;
-  int? intGuardTime;
-  TextEditingController doubleGuardTimeController = TextEditingController();
-  bool isFixedGuardTime = false;
   bool isAppBarVisible = true;
 
   @override
@@ -79,25 +69,23 @@ class _GuardListScreenState extends State<GuardListScreen>
       return;
     }
 
-    setState(() {
-      guardGroups = generator.generateGuardGroups(
-        teamMembers,
-        numberOfConcurrentGuards,
-        startTime,
-        endTime,
-        isFixedGuardTime ? guardTime : null,
-      );
+    List<List<AssignedTeamMember>> generatedGroups = generator.generateGuardGroups(
+      Provider.of<TeamProvider>(context, listen: false).teamMembers,
+      numberOfConcurrentGuards,
+      startTime,
+      endTime,
+      isFixedGuardTime ? guardTime : null,
+    );
 
-      Provider.of<GuardGroupsProvider>(context, listen: false)
-        .updateGuardGroups(guardGroups);
-    });
+    Provider.of<GuardGroupsProvider>(context, listen: false)
+        .updateGuardGroups(generatedGroups);
 
-    if (guardGroups.isEmpty) {
+    if (generatedGroups.isEmpty) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Invalid Guarding Period", style: TextStyle(color: Color.fromARGB(255, 255, 196, 0))),
+            title: Text("Invalid Guarding Period"),
             content: Text("Please make sure you enter a guarding period that is long enough to assign a guard."),
             actions: <Widget>[
               TextButton(
@@ -119,97 +107,49 @@ class _GuardListScreenState extends State<GuardListScreen>
   Widget build(BuildContext context) {
     super.build(context);
     var scheme = Theme.of(context).colorScheme;
-    teamMembers = Provider.of<TeamProvider>(context).teamMembers;
-    guardGroups = Provider.of<GuardGroupsProvider>(context).guardGroups;
-    guardGroupsList = GuardGroupsList();
+    List<List<AssignedTeamMember>> guardGroups = Provider.of<GuardGroupsProvider>(context).guardGroups;
+    GuardGroupsList guardGroupsList = GuardGroupsList();
 
-    List<Widget> fabWidgets = guardGroups.isEmpty 
-      ? [
-          FloatingActionButton(
-            onPressed: () {
-              _showGenerateListModal(
-                context,
-                selectedStartTime,
-                selectedEndTime, 
-                (time) => setState(() => selectedStartTime = time), 
-                (time) => setState(() => selectedEndTime = time));
-            },
-            child: const Icon(Icons.add)),
-        ]
-      : [      
-          FloatingActionButton(
-            onPressed: () { 
-              Clipboard.setData(ClipboardData(text: guardGroupsList.getReadableList()));
-              SnackbarUtil.showSnackBar(context, 'List Copied!'); 
-            },
-            child: const Icon(Icons.copy)),
-            SizedBox(width: 16),      
-          FloatingActionButton(
-            onPressed: () {
-              final String readableList = guardGroupsList.getReadableList();
-              Share.share(readableList);        
-            },        
-            child: const Icon(Icons.share_sharp)),
-            SizedBox(width: 16),      
-            FloatingActionButton(        
-              onPressed: () {          
-                _showGenerateListModal(              
-                  context,              
-                  selectedStartTime,              
-                  selectedEndTime,              
-                  (time) => setState(() => selectedStartTime = time),              
-                  (time) => setState(() => selectedEndTime = time));        
-              },        
-              child: const Icon(Icons.edit)),
-        ];
-
-      return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Guard List',
-            style: TextStyle(color: scheme.secondary),
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Guard List',
+          style: TextStyle(color: scheme.secondary),
         ),
-        body: NotificationListener<UserScrollNotification>(
-          onNotification: (notification) {
-            if (guardGroups.isEmpty) {
-              setState(() => isAppBarVisible = true);
-            } else {
-              if (notification.direction == ScrollDirection.reverse) {
-                if (isAppBarVisible) setState(() => isAppBarVisible = false);
-              } else if (notification.direction == ScrollDirection.forward) {
-                if (!isAppBarVisible) setState(() => isAppBarVisible = true);
-              }
+      ),
+      body: NotificationListener<UserScrollNotification>(
+        onNotification: (notification) {
+          if (guardGroups.isEmpty) {
+            setState(() => isAppBarVisible = true);
+          } else {
+            if (notification.direction == ScrollDirection.reverse) {
+              if (isAppBarVisible) setState(() => isAppBarVisible = false);
+            } else if (notification.direction == ScrollDirection.forward) {
+              if (!isAppBarVisible) setState(() => isAppBarVisible = true);
             }
-            return true;
-          },
-          child: Stack(
-            children: [
-              guardGroupsList, // Full screen height
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: AnimatedOpacity(
-                  opacity: isAppBarVisible ? 1.0 : 0.0,
-                  duration: Duration(milliseconds: 300),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                      child: BottomAppBar(
-                        notchMargin: 4.0,
-                        elevation: 10.0,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: fabWidgets,
-                          ),
-                        ),
-                      ),
-                  )),
-                ),
-            ],
-          ),
+          }
+          return true;
+        },
+        child: Stack(
+          children: [
+            guardGroupsList,
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: GuardListScreenBottomAppBar(
+                isAppBarVisible: isAppBarVisible,
+                guardGroups: guardGroups,
+                onAddOrEditPressed: () {
+                  _showGenerateListModal(
+                    context,
+                    selectedStartTime,
+                    selectedEndTime, 
+                    (time) => setState(() => selectedStartTime = time), 
+                    (time) => setState(() => selectedEndTime = time));
+                },
+              ),
+            ),
+          ],
         ),
-      );
-    }
-}
-
+      ),
+    );
+  }}

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:maazin_app/date_formatter.dart';
+import 'package:maazin_app/utils/date_formatter.dart';
 
 class DateTimePicker extends StatefulWidget {
   final String label;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/team_provider.dart';
-import '../models/team_member.dart';
-import '../widgets/modify_team_member_dialog.dart';
+import '../../providers/team_provider.dart';
+import '../../models/team_member.dart';
+import 'modify_team_member_dialog.dart';
 
 class TeamList extends StatefulWidget {
   const TeamList({Key? key}) : super(key: key);
@@ -31,7 +31,7 @@ class _TeamListState extends State<TeamList> {
               background: Container(
                 color: Colors.red,
                 alignment: Alignment.centerLeft,
-                child: Padding(
+                child: const Padding(
                   padding: EdgeInsets.only(left: 16.0),
                   child: Icon(Icons.delete, color: Colors.white),
                 ),
@@ -61,7 +61,7 @@ class _TeamListState extends State<TeamList> {
                             },
                           ),
                           IconButton(
-                            icon: Icon(Icons.edit),
+                            icon: const Icon(Icons.edit),
                             onPressed: () {
                               showDialog(
                                 context: context,

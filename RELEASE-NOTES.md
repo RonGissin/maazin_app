@@ -1,5 +1,6 @@
 **v1.2.0**
 * Add settings button (and modal).
+* Add intro pages for first timers.
 
 **v1.1.0**
 * Add 'Clear' button to clear the existing guard list.

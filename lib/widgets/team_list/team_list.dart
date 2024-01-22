@@ -29,7 +29,6 @@ class _TeamListState extends State<TeamList> {
               key: Key(teamMember.name),
               direction: DismissDirection.startToEnd,
               background: Container(
-                //color: Colors.red,
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.red),
                 alignment: Alignment.centerLeft,
                 child: const Padding(

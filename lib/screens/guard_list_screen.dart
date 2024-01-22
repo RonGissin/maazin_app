@@ -85,11 +85,11 @@ class _GuardListScreenState extends State<GuardListScreen>
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Invalid Guarding Period"),
-            content: Text("Please make sure you enter a guarding period that is long enough to assign a guard."),
+            title: const Text("Invalid Guarding Period"),
+            content: const Text("Please make sure you enter a guarding period that is long enough to assign a guard."),
             actions: <Widget>[
               TextButton(
-                child: Text("OK"),
+                child: const Text("OK"),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -164,26 +164,28 @@ class _GuardListScreenState extends State<GuardListScreen>
   }}
 
   Widget _buildNoListWidget() {
-    return const Card(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: EdgeInsets.all(10),
-            child: Center(
-              child: Text("No list yet..", style: TextStyle(fontSize: 15))
-            )
-          ),
-          Padding(
-            padding: EdgeInsets.all(10), 
-            child: Center(
-              child: Text("Press the + button to generate a list", style: TextStyle(fontSize: 15))
-            )
-          ),
-        ],
-      ),
-    );
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      child: Card(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: Center(
+                child: Text("No list yet..", style: TextStyle(fontSize: 15))
+              )
+            ),
+            Padding(
+              padding: EdgeInsets.all(10), 
+              child: Center(
+                child: Text("Press the + button to generate a list", style: TextStyle(fontSize: 15))
+              )
+            ),
+          ],
+        ),
+    ));
   }
 
   Widget _buildClearButton(BuildContext context) {
@@ -192,8 +194,8 @@ class _GuardListScreenState extends State<GuardListScreen>
         _showClearConfirmationDialog(context);
         // Provider.of<GuardGroupsProvider>(context, listen: false).updateGuardGroups([]);
       },
-      icon: Icon(Icons.recycling, size: 20.0),
-      label: Text("Clear"),
+      icon: const Icon(Icons.recycling, size: 20.0),
+      label: const Text("Clear"),
       style: OutlinedButton.styleFrom(
         side: BorderSide(color: Theme.of(context).colorScheme.primary), // Border color
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), // Rounded corners
@@ -206,16 +208,16 @@ void _showClearConfirmationDialog(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        content: Text("Are you sure you want to clear the guard list?"),
+        content: const Text("Are you sure you want to clear the guard list?"),
         actions: <Widget>[
           TextButton(
-            child: Text("Cancel"),
+            child: const Text("Cancel"),
             onPressed: () {
               Navigator.of(context).pop(); // Dismiss the dialog
             },
           ),
           TextButton(
-            child: Text("Clear"),
+            child: const Text("Clear"),
             onPressed: () {
               Provider.of<GuardGroupsProvider>(context, listen: false).updateGuardGroups([]);
               Navigator.of(context).pop(); // Dismiss the dialog

@@ -15,10 +15,11 @@ class TeamListScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: Center(
+          child:Text(
           'Manage Team Members',
           style: TextStyle(color: secondaryColor),
-        ),
+        )),
       ),
       body: Padding(
         padding: const EdgeInsets.only(right: 16.0, left: 16.0),

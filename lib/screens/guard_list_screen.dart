@@ -112,10 +112,11 @@ class _GuardListScreenState extends State<GuardListScreen>
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: Center(
+          child: Text(
           '${guardGroups.isEmpty ? 'Create a ' : 'Edit '}Guard List',
           style: TextStyle(color: scheme.secondary),
-        ),
+        )),
       ),
       body: NotificationListener<UserScrollNotification>(
         onNotification: (notification) {

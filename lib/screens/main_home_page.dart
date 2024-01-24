@@ -15,33 +15,34 @@ class MaazinHomePage extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Stack(
-          children: [
-            Align(
-              alignment: Alignment.center,
-              child: SvgPicture.asset(
-                'assets/logo.svg', // Replace with the path to your SVG file
-                width: 72,  // Set the desired width
-                height: 72, // Set the desired height
-                color: secondaryColor,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 5.0),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: IconButton(
-                  icon: Icon(Icons.settings, color: secondaryColor),
-                  onPressed: () {
-                    showDialog(
-                          context: context,
-                          builder: (BuildContext context) => const SettingsModal(),
-                        );
-                  },
-              ),
-            )),
-          ],
-          ),
+          title: SafeArea(
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: SvgPicture.asset(
+                    'assets/logo.svg', // Replace with the path to your SVG file
+                    width: 72,  // Set the desired width
+                    height: 72, // Set the desired height
+                    color: secondaryColor,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 5.0),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      icon: Icon(Icons.settings, color: secondaryColor),
+                      onPressed: () {
+                        showDialog(
+                              context: context,
+                              builder: (BuildContext context) => const SettingsModal(),
+                            );
+                      },
+                  ),
+                )),
+              ],
+          )),
           bottom: TabBar(
             tabs: [
               Tab(

@@ -15,7 +15,7 @@ class _SnakeScreenState extends State<SnakeScreen> {
   final int squaresPerRow = 20;
   final int squaresPerCol = 40;
   final double squareSize = 10.0;
-  final int gameSpeed = 200; // Lower is faster
+  final int gameSpeed = 100; // Lower is faster
 
   Color foodColor = Colors.red;
   
@@ -153,11 +153,25 @@ class _SnakeScreenState extends State<SnakeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Snake Game - Score: $score'),
+        appBar: AppBar(
+        title: Text('Snake Game', style: TextStyle(color: widget.snakeColor)),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(20.0), // Adjust the height as needed
+          child: Container(
+            color: AppBarTheme.of(context).backgroundColor, // Match the AppBar's background color
+            height: 20.0,
+            alignment: Alignment.center,
+            child: Text(
+              'Score: $score',
+              style: TextStyle(
+                color: Colors.lightGreen, // Change as needed for your app's theme
+              ),
+            ),
+          ),
+        ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0), // Adds padding around the game board
+        padding: const EdgeInsets.only(top: 5, bottom: 30.0), // Adds padding around the game board
         child: Center(
           child: AspectRatio(
             aspectRatio: squaresPerRow / squaresPerCol, // Maintains the aspect ratio of the game board

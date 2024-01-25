@@ -24,7 +24,7 @@ class GuardListGenerator {
     // Calculate the duration for each group (5 minutes is the smallest time batch)
     Duration groupDuration = guardTime != null ?
       Duration(minutes:guardTime):
-      Duration(minutes: (totalDuration.inMinutes / numGroups / roundToInMinutes).ceil() * roundToInMinutes);
+      Duration(minutes: (totalDuration.inMinutes / numGroups / roundToInMinutes).floor() * roundToInMinutes);
 
     // Initialize the list of groups
     List<List<AssignedTeamMember>> groups = [];
@@ -60,6 +60,14 @@ class GuardListGenerator {
       {
         break;
       }
+    }
+
+    
+    // let the last group guard a bit more if needed..
+    if (groups.isNotEmpty && groups.last[0].endTime.isBefore(endTime)) {
+      groups.last.forEach((guard) {
+        guard.endTime = endTime;
+      });
     }
 
     return groups;

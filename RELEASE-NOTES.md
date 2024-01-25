@@ -1,3 +1,7 @@
+**v1.3.0**
+* Add snake game.
+* improve looks for Android.
+
 **v1.2.0**
 * Add settings button (and modal).
 * Add intro pages for first timers.

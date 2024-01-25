@@ -155,6 +155,7 @@ class _SnakeScreenState extends State<SnakeScreen> {
     return Scaffold(
         appBar: AppBar(
         title: Text('Snake Game', style: TextStyle(color: widget.snakeColor)),
+        centerTitle: true,
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(20.0), // Adjust the height as needed
           child: Container(

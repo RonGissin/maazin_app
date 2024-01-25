@@ -1,11 +1,11 @@
-import '../models/assigned_team_member.dart';
-import '../models/team_member.dart';
+import 'models/assigned_team_member_model.dart';
+import 'models/team_member_model.dart';
 
 const int roundToInMinutes = 5;
 
 class GuardListGenerator {
-  List<List<AssignedTeamMember>> generateGuardGroups(
-    List<TeamMember> teamMembers, 
+  List<List<AssignedTeamMemberModel>> generateGuardGroups(
+    List<TeamMemberModel> teamMembers, 
     int groupSize, 
     DateTime startTime,
     DateTime endTime, 
@@ -27,7 +27,7 @@ class GuardListGenerator {
       Duration(minutes: (totalDuration.inMinutes / numGroups / roundToInMinutes).ceil() * roundToInMinutes);
 
     // Initialize the list of groups
-    List<List<AssignedTeamMember>> groups = [];
+    List<List<AssignedTeamMemberModel>> groups = [];
 
     // Initialize the current time for assigning guard time
     DateTime currentTime = startTime;
@@ -37,7 +37,7 @@ class GuardListGenerator {
 
     while(tempDuration.inMinutes < totalDuration.inMinutes)
     {
-      List<AssignedTeamMember> group = [];
+      List<AssignedTeamMemberModel> group = [];
       late DateTime memberEndTime;
 
       for (int i = 0; i < groupSize; i++) {
@@ -47,7 +47,7 @@ class GuardListGenerator {
 
         var teamMember = enabledMembers[teamMemberPointer];
 
-        group.add(AssignedTeamMember(teamMember.name, teamMember.isEnabled, memberStartTime, memberEndTime)); 
+        group.add(AssignedTeamMemberModel(teamMember.name, teamMember.isEnabled, memberStartTime, memberEndTime)); 
 
         teamMemberPointer = (teamMemberPointer + 1) % enabledMembers.length;
       }

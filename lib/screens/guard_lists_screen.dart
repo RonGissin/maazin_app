@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:maazin_app/models/guard_list_model.dart';
 import 'package:provider/provider.dart';
-import '../models/assigned_team_member.dart';
+import '../models/assigned_team_member_model.dart';
 import '../guard_list_generator.dart';
 import '../widgets/guard_list/generate_list_modal.dart';
-import '../widgets/guard_list/guard_groups_list.dart';
 import '../providers/team_provider.dart';
-import '../providers/guard_groups_provider.dart';
-import '../widgets/guard_list/guard_list_screen_bottom_app_bar.dart';
+import '../providers/guard_lists_provider.dart';
+import '../widgets/guard_list/guard_lists_screen_bottom_app_bar.dart';
+import 'guard_list_details_screen.dart';
 
-class GuardListScreen extends StatefulWidget {
-  const GuardListScreen({Key? key}) : super(key: key);
+class GuardListsScreen extends StatefulWidget {
+  const GuardListsScreen({Key? key}) : super(key: key);
 
   @override
-  _GuardListScreenState createState() => _GuardListScreenState();
+  _GuardListsScreenState createState() => _GuardListsScreenState();
 }
 
-class _GuardListScreenState extends State<GuardListScreen>
+class _GuardListsScreenState extends State<GuardListsScreen>
     with AutomaticKeepAliveClientMixin {
   GuardListGenerator generator = GuardListGenerator();
   DateTime selectedStartTime = DateTime.now();
@@ -55,6 +56,7 @@ class _GuardListScreenState extends State<GuardListScreen>
   }
 
   void _generateList(
+    String listName,
     DateTime startTime,
     DateTime endTime,
     int? guardTime,
@@ -69,7 +71,7 @@ class _GuardListScreenState extends State<GuardListScreen>
       return;
     }
 
-    List<List<AssignedTeamMember>> generatedGroups = generator.generateGuardGroups(
+    List<List<AssignedTeamMemberModel>> generatedGroups = generator.generateGuardGroups(
       Provider.of<TeamProvider>(context, listen: false).teamMembers,
       numberOfConcurrentGuards,
       startTime,
@@ -77,8 +79,8 @@ class _GuardListScreenState extends State<GuardListScreen>
       isFixedGuardTime ? guardTime : null,
     );
 
-    Provider.of<GuardGroupsProvider>(context, listen: false)
-        .updateGuardGroups(generatedGroups);
+    Provider.of<GuardListsProvider>(context, listen: false)
+        .addGuardList(GuardListModel(name: listName, guardGroups: generatedGroups));
 
     if (generatedGroups.isEmpty) {
       showDialog(
@@ -107,20 +109,19 @@ class _GuardListScreenState extends State<GuardListScreen>
   Widget build(BuildContext context) {
     super.build(context);
     var scheme = Theme.of(context).colorScheme;
-    List<List<AssignedTeamMember>> guardGroups = Provider.of<GuardGroupsProvider>(context).guardGroups;
-    GuardGroupsList guardGroupsList = GuardGroupsList();
+    List<GuardListModel> guardLists = Provider.of<GuardListsProvider>(context).guardLists;
 
     return Scaffold(
       appBar: AppBar(
         title: Center(
           child: Text(
-          '${guardGroups.isEmpty ? 'Create a ' : 'Edit '}Guard List',
+          'Your Guard Lists',
           style: TextStyle(color: scheme.secondary),
         )),
       ),
       body: NotificationListener<UserScrollNotification>(
         onNotification: (notification) {
-          if (guardGroups.isEmpty) {
+          if (guardLists.isEmpty) {
             setState(() => isAppBarVisible = true);
           } else {
             if (notification.direction == ScrollDirection.reverse) {
@@ -134,21 +135,37 @@ class _GuardListScreenState extends State<GuardListScreen>
         child: Stack(
           children: [
               Column(
-                children: guardGroups.isEmpty ? 
+                children: guardLists.isEmpty ? 
                   [ 
                       _buildNoListWidget() 
                   ] :
                   [
                     _buildClearButton(context),
-                    Expanded(child: guardGroupsList),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: guardLists.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            child: ListTile(
+                              title: Text(guardLists[index].name),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => GuardListDetailScreen(guardList: guardLists[index])),
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ]
               ),
             Align(
               alignment: Alignment.bottomCenter,
-              child: GuardListScreenBottomAppBar(
+              child: GuardListsScreenBottomAppBar(
                 isAppBarVisible: isAppBarVisible,
-                guardGroups: guardGroups,
-                onAddOrEditPressed: () {
+                onAddPressed: () {
                   _showGenerateListModal(
                     context,
                     selectedStartTime,
@@ -220,7 +237,7 @@ void _showClearConfirmationDialog(BuildContext context) {
           TextButton(
             child: const Text("Clear"),
             onPressed: () {
-              Provider.of<GuardGroupsProvider>(context, listen: false).updateGuardGroups([]);
+              Provider.of<GuardListsProvider>(context, listen: false).clearGuardLists();
               Navigator.of(context).pop(); // Dismiss the dialog
             },
           ),

@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../models/assigned_team_member.dart';
-import '../../providers/guard_groups_provider.dart';
+import '../../models/assigned_team_member_model.dart';
+import '../../providers/guard_lists_provider.dart';
 import 'guard_group_tile.dart';
 
-class GuardGroupsList extends StatefulWidget {
-  List<List<AssignedTeamMember>> guardGroups = [];
+class GuardList extends StatefulWidget {
+  List<List<AssignedTeamMemberModel>> guardGroups = [];
+  String name;
 
-  GuardGroupsList({Key? key}) : super(key: key);
+  GuardList({Key? key, required this.name, required this.guardGroups}) : super(key: key);
 
   @override
-  _GuardGroupsListState createState() => _GuardGroupsListState();
+  _GuardListState createState() => _GuardListState();
 }
 
-class _GuardGroupsListState extends State<GuardGroupsList> {
+class _GuardListState extends State<GuardList> {
   @override
   Widget build(BuildContext context) {
     var scheme = Theme.of(context).colorScheme;
-    widget.guardGroups = Provider.of<GuardGroupsProvider>(context).guardGroups;
     
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -52,8 +52,8 @@ class _GuardGroupsListState extends State<GuardGroupsList> {
                     }
                   }
 
-                  Provider.of<GuardGroupsProvider>(context, listen: false)
-                      .updateGuardGroups(widget.guardGroups);
+                  Provider.of<GuardListsProvider>(context, listen: false)
+                      .updateGuardList(widget.name, widget.guardGroups);
                 });
               },
             ),
@@ -61,7 +61,7 @@ class _GuardGroupsListState extends State<GuardGroupsList> {
   }
 }
 
-void _swapGroupTimes(List<AssignedTeamMember> groupA, List<AssignedTeamMember> groupB) {
+void _swapGroupTimes(List<AssignedTeamMemberModel> groupA, List<AssignedTeamMemberModel> groupB) {
     DateTime tempStartTime = groupA[0].startTime;
     DateTime tempEndTime = groupA[0].endTime;
 

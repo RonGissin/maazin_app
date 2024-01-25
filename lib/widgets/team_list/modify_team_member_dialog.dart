@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../models/team_member.dart';
+import '../../models/team_member_model.dart';
 
 class ModifyTeamMemberDialog extends StatefulWidget {
-  final List<TeamMember> teamMembers;
+  final List<TeamMemberModel> teamMembers;
   final String title;
   final String actionButtonText;
   final void Function(String) onActionButtonPressed;

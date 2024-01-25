@@ -1,8 +1,8 @@
-class TeamMember {
+class TeamMemberModel {
   late String _name; // Use late to allow setting it later
   late bool _isEnabled;
 
-  TeamMember({required String name, required bool isEnabled}) {
+  TeamMemberModel({required String name, required bool isEnabled}) {
     _name = name;
     _isEnabled = isEnabled;
   }

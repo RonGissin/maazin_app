@@ -1,8 +1,8 @@
 import 'date_formatter.dart';
-import '../models/assigned_team_member.dart';
+import '../models/assigned_team_member_model.dart';
 
 class WhatsappGuardListFormatter {
-  static String ListToString(List<List<AssignedTeamMember>> guardGroups) {
+  static String ListToString(List<List<AssignedTeamMemberModel>> guardGroups) {
     StringBuffer formattedList = StringBuffer();
     formattedList.writeln('*Guard List*'); // WhatsApp markdown for bold text
 

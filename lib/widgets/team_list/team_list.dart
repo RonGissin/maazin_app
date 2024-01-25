@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/team_provider.dart';
-import '../../models/team_member.dart';
+import '../../models/team_member_model.dart';
 import 'modify_team_member_dialog.dart';
 
 class TeamList extends StatefulWidget {
@@ -14,13 +14,13 @@ class TeamList extends StatefulWidget {
 class _TeamListState extends State<TeamList> {
   @override
   Widget build(BuildContext context) {
-    List<TeamMember> teamMembers = Provider.of<TeamProvider>(context).teamMembers;
+    List<TeamMemberModel> teamMembers = Provider.of<TeamProvider>(context).teamMembers;
 
     return Expanded(
       child: ReorderableListView.builder(
         itemCount: teamMembers.length,
         itemBuilder: (context, index) {
-          TeamMember teamMember = teamMembers[index];
+          TeamMemberModel teamMember = teamMembers[index];
 
           return ReorderableDelayedDragStartListener(
             key: Key(teamMember.name),
@@ -93,7 +93,7 @@ class _TeamListState extends State<TeamList> {
             newIndex -= 1;
           }
           setState(() {
-            final TeamMember item = teamMembers.removeAt(oldIndex);
+            final TeamMemberModel item = teamMembers.removeAt(oldIndex);
             teamMembers.insert(newIndex, item);
             Provider.of<TeamProvider>(context, listen: false).saveTeamMembers();
           });

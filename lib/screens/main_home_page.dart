@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import './team_list_screen.dart';
-import './guard_list_screen.dart';
+import 'guard_lists_screen.dart';
 import '../widgets/settings_modal.dart';
 
 class MaazinHomePage extends StatelessWidget {
@@ -75,7 +75,7 @@ class MaazinHomePage extends StatelessWidget {
         body: const TabBarView(
           children: [
             TeamListScreen(),
-            GuardListScreen(),
+            GuardListsScreen(),
           ],
         ),
       ),

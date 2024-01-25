@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../models/assigned_team_member.dart';
+import '../../models/assigned_team_member_model.dart';
 import '../../utils/date_formatter.dart';
 
 class GuardGroupTile extends StatefulWidget {
-  final List<AssignedTeamMember> groupMembers;
+  final List<AssignedTeamMemberModel> groupMembers;
   final ColorScheme colorScheme;
 
   const GuardGroupTile({

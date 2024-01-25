@@ -1,12 +1,12 @@
 import 'dart:convert'; // Import the dart:convert library
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/team_member.dart';
+import '../models/team_member_model.dart';
 import 'package:flutter/widgets.dart';
 
 class TeamProvider extends ChangeNotifier with WidgetsBindingObserver{
-  List<TeamMember> _teamMembers = [];
+  List<TeamMemberModel> _teamMembers = [];
 
-  List<TeamMember> get teamMembers => _teamMembers;
+  List<TeamMemberModel> get teamMembers => _teamMembers;
 
   // Initialize the state by loading team members from SharedPreferences
   Future<void> init() async {
@@ -39,8 +39,8 @@ class TeamProvider extends ChangeNotifier with WidgetsBindingObserver{
 
       // Convert List<dynamic> to List<TeamMember>
       _teamMembers = savedTeamMembersList
-          .map((item) => TeamMember(name: item['name'], isEnabled: item['isEnabled']))
-          .cast<TeamMember>() // Add cast to TeamMember
+          .map((item) => TeamMemberModel(name: item['name'], isEnabled: item['isEnabled']))
+          .cast<TeamMemberModel>() // Add cast to TeamMember
           .toList();
 
       notifyListeners();
@@ -49,7 +49,7 @@ class TeamProvider extends ChangeNotifier with WidgetsBindingObserver{
 
   // Add a new team member
   void addTeamMember(String newMemberName) {
-    _teamMembers.insert(0, TeamMember(name: newMemberName, isEnabled: true));
+    _teamMembers.insert(0, TeamMemberModel(name: newMemberName, isEnabled: true));
     saveTeamMembers();
   }
 

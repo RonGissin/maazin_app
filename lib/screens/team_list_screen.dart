@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maazin_app/models/team_member.dart';
+import 'package:maazin_app/models/team_member_model.dart';
 import 'package:provider/provider.dart';
 import '../widgets/team_list/team_list.dart';
 import '../providers/team_provider.dart';
@@ -11,7 +11,7 @@ class TeamListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color secondaryColor = Theme.of(context).colorScheme.secondary;
-    List<TeamMember> teamMembers = Provider.of<TeamProvider>(context).teamMembers;
+    List<TeamMemberModel> teamMembers = Provider.of<TeamProvider>(context).teamMembers;
 
     return Scaffold(
       appBar: AppBar(

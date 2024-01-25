@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../datetime_picker.dart';
 import 'number_of_guards_input.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 class GenerateListModal extends StatefulWidget {
   final DateTime previousStartTime;
   final DateTime previousEndTime;
-  final Function(DateTime, DateTime, int?, int, bool) onGenerateList;
+  final Function(String, DateTime, DateTime, int?, int, bool) onGenerateList;
   final void Function(DateTime) onSetStartTime;
   final void Function(DateTime) onSetEndTime;
 
@@ -29,7 +30,8 @@ class _GenerateListModalState extends State<GenerateListModal> {
   bool isInvalidTime = false;
   int numberOfConcurrentGuards = 1;
   int? intGuardTime;
-  TextEditingController doubleGuardTimeController = TextEditingController();
+  final TextEditingController doubleGuardTimeController = TextEditingController();
+  final TextEditingController listNameController = TextEditingController();
   bool isFixedGuardTime = false;
 
   @override
@@ -73,6 +75,11 @@ class _GenerateListModalState extends State<GenerateListModal> {
           const Text(
             'Configure your watch',
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 20.0),
+          TextField(
+            controller: listNameController,
+            decoration: const InputDecoration(labelText: 'List Name'),
           ),
           const SizedBox(height: 20.0),
           DateTimePicker(
@@ -190,7 +197,10 @@ class _GenerateListModalState extends State<GenerateListModal> {
                     return;
                   }
 
+                  var listName = listNameController.text.trim();
+
                   widget.onGenerateList(
+                    listName,
                     selectedStartTime,
                     selectedEndTime,
                     isFixedGuardTime ? intGuardTime : null,

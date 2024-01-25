@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import './team_list_screen.dart';
 import './guard_list_screen.dart';
 import '../widgets/settings_modal.dart';
+import 'snake_screen.dart';
 
 class MaazinHomePage extends StatelessWidget {
   const MaazinHomePage({super.key});
@@ -38,6 +39,17 @@ class MaazinHomePage extends StatelessWidget {
                               context: context,
                               builder: (BuildContext context) => const SettingsModal(),
                             );
+                      },
+                  ),
+                )),
+                Padding(
+                  padding: const EdgeInsets.only(top: 5.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: IconButton(
+                      icon: Icon(Icons.sports_esports, color: secondaryColor),
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (_) => SnakeScreen(snakeColor: secondaryColor,)));
                       },
                   ),
                 )),

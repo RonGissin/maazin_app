@@ -5,10 +5,10 @@ import '../widgets/guard_list/guard_list.dart';
 import '../widgets/guard_list/guard_lists_screen_bottom_app_bar.dart';
 
 class GuardListDetailScreen extends StatefulWidget {
-  const GuardListsScreen({Key? key, required this.guardList}) : super(key: key);
+  const GuardListDetailScreen({Key? key}) : super(key: key);
 
   @override
-  _GuardListsScreenState createState() => _GuardListsScreenState();
+  _GuardListDetailScreenState createState() => _GuardListDetailScreenState();
 }
 
 class _GuardListDetailScreenState extends State<GuardListDetailScreen>

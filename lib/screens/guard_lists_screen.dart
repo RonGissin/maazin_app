@@ -5,6 +5,7 @@ import 'package:maazin_app/screens/guard_list_preview_screen.dart';
 import 'package:provider/provider.dart';
 import '../models/assigned_team_member_model.dart';
 import '../guard_list_generator.dart';
+import '../widgets/generic/dismissable_reorderable_list_view.dart';
 import '../widgets/guard_list/generate_list_modal.dart';
 import '../providers/team_provider.dart';
 import '../providers/guard_lists_provider.dart';
@@ -87,7 +88,10 @@ class _GuardListsScreenState extends State<GuardListsScreen>
   MaterialPageRoute(
     builder: (context) => GuardListPreviewScreen(
       guardList: GuardListModel(name: listName, guardGroups: generatedGroups),
-      onSave: () => _saveGuardList(listName, generatedGroups),
+      onSave: () {
+        _saveGuardList(listName, generatedGroups);
+        setState(() {});
+      },
       onRegenerate: () => _showGenerateListModalWithContext(context),
     ),
   ),
@@ -108,7 +112,7 @@ void _showGenerateListModalWithContext(context) {
 }
 
 void _saveGuardList(String listName, List<List<AssignedTeamMemberModel>> guardGroups) {
-  Provider.of<GuardListsProvider>(context, listen: false)
+    Provider.of<GuardListsProvider>(context, listen: false)
       .addGuardList(GuardListModel(name: listName, guardGroups: guardGroups));
 }
   void _showInvalidPeriodDialog(BuildContext context) {
@@ -170,23 +174,42 @@ void _saveGuardList(String listName, List<List<AssignedTeamMemberModel>> guardGr
                   [
                     _buildClearButton(context),
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: guardLists.length,
-                        itemBuilder: (context, index) {
-                          return Card(
-                            child: ListTile(
-                              title: Text(guardLists[index].name),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => GuardListDetailScreen(guardList: guardLists[index])),
-                                );
-                              },
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 16.0, left: 16.0),
+                        child: DismissableReorderableListView<GuardListModel>(
+                          key: const Key("guard-lists-view"),
+                          itemKeyPrefix: "guard-lists",
+                          items: guardLists,
+                          itemCount: guardLists.length,
+                          onReorder: (int oldIndex, int newIndex) {
+                            if (newIndex > oldIndex) {
+                              newIndex -= 1;
+                            }
+
+                            setState(() {
+                              final GuardListModel item = guardLists.removeAt(oldIndex);
+                              guardLists.insert(newIndex, item);
+                              Provider.of<GuardListsProvider>(context, listen: false).saveGuardLists();
+                            });
+                          },
+                          extractNameFromItem: (l) => l.name,
+                          onItemDismissed: (direction, index) {
+                            Provider.of<GuardListsProvider>(context, listen: false).removeList(index);
+                          },
+                          onItemEnableToggle: (i) => {},
+                          onModifyItem: (GuardListModel item, String newName) {
+                            Provider.of<GuardListsProvider>(context, listen: false)
+                                .renameGuardList(item.name, newName);
+                          },
+                          modifyItemDialogText: "Edit List Name",
+                          withEnableToggleOption: false,
+                          onItemTapped: (item) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => GuardListDetailScreen(guardList: item)),
+                            );
+                          },)
+                      )),
                   ]
               ),
             Align(
@@ -238,7 +261,6 @@ void _saveGuardList(String listName, List<List<AssignedTeamMemberModel>> guardGr
   return OutlinedButton.icon(
       onPressed: () {
         _showClearConfirmationDialog(context);
-        // Provider.of<GuardGroupsProvider>(context, listen: false).updateGuardGroups([]);
       },
       icon: const Icon(Icons.recycling, size: 20.0),
       label: const Text("Clear"),

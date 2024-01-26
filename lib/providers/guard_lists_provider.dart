@@ -47,6 +47,13 @@ class GuardListsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Remove a team member
+  void removeList(int index) {
+    guardLists.removeAt(index);
+    saveGuardLists();
+    notifyListeners();
+  }
+
   void saveGuardLists() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<Map<String, dynamic>> guardListsMap = guardLists.map((listInfo) {
@@ -83,6 +90,13 @@ class GuardListsProvider extends ChangeNotifier {
   void updateGuardList(String listName, List<List<AssignedTeamMemberModel>> newGuardGroups) {
     var list = guardLists.firstWhere((element) => element.name == listName);
     list.guardGroups = newGuardGroups;
+    saveGuardLists();
+    notifyListeners();
+  }
+
+  void renameGuardList(String listName, String newName) {
+    var list = guardLists.firstWhere((element) => element.name == listName);
+    list.name = newName;
     saveGuardLists();
     notifyListeners();
   }

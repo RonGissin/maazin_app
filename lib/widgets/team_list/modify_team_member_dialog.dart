@@ -1,26 +1,27 @@
 import 'package:flutter/material.dart';
-import '../../models/team_member_model.dart';
 
-class ModifyTeamMemberDialog extends StatefulWidget {
-  final List<TeamMemberModel> teamMembers;
+class ModifyListItemDialog<T> extends StatefulWidget {
+  final List<T> items;
   final String title;
   final String actionButtonText;
+  final String Function(T) extractItemName;
   final void Function(String) onActionButtonPressed;
 
-  const ModifyTeamMemberDialog(
+  const ModifyListItemDialog(
     {
       Key? key,
       required this.title,
       required this.actionButtonText,
       required this.onActionButtonPressed,
-      required this.teamMembers
+      required this.extractItemName,
+      required this.items
     }) : super(key: key);
 
   @override
-  _ModifyTeamMemberDialogState createState() => _ModifyTeamMemberDialogState();
+  _ModifyListItemDialogState<T> createState() => _ModifyListItemDialogState<T>();
 }
 
-class _ModifyTeamMemberDialogState extends State<ModifyTeamMemberDialog> {
+class _ModifyListItemDialogState<T> extends State<ModifyListItemDialog<T>> {
   final TextEditingController _controller = TextEditingController();
   bool _showEmptyError = false;
   bool _showNameExistsError = false;
@@ -62,7 +63,8 @@ class _ModifyTeamMemberDialogState extends State<ModifyTeamMemberDialog> {
             setState(() {
               _showEmptyError = newMemberName.isEmpty;
               _showNameExistsError =
-                  newMemberName.isNotEmpty && widget.teamMembers.map((e) => e.name.toLowerCase()).contains(lowerCaseMemberName);
+                  newMemberName.isNotEmpty
+                  && widget.items.any((e) => widget.extractItemName(e).toLowerCase() == lowerCaseMemberName);
             });
 
             if (!_showEmptyError && !_showNameExistsError) {

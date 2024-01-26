@@ -36,10 +36,11 @@ class TeamListScreen extends StatelessWidget {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return ModifyTeamMemberDialog(
-                      teamMembers: teamMembers,
+                    return ModifyListItemDialog<TeamMemberModel>(
+                      items: teamMembers,
                       title: 'Add Team Member',
                       actionButtonText: 'Add',
+                      extractItemName: (tm) => tm.name,
                       onActionButtonPressed: (String newName) => Provider.of<TeamProvider>(context, listen: false).addTeamMember(newName));
                   },
                 );

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:maazin_app/widgets/guard_list/guard_list_preview_bottom_app_bar.dart';
 import '../models/guard_list_model.dart';
 import '../widgets/guard_list/guard_list.dart';
-import '../widgets/guard_list/guard_lists_screen_bottom_app_bar.dart';
 
 class GuardListPreviewScreen extends StatefulWidget {
   final GuardListModel guardList;
@@ -28,6 +28,7 @@ class _GuardListPreviewScreenState extends State<GuardListPreviewScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Preview: ${widget.guardList.name}'),
+        centerTitle: true,
       ),
       body: NotificationListener<UserScrollNotification>(
         onNotification: (notification) {
@@ -45,19 +46,21 @@ class _GuardListPreviewScreenState extends State<GuardListPreviewScreen> {
             GuardList(name: widget.guardList.name, guardGroups: widget.guardList.guardGroups),
             Align(
               alignment: Alignment.bottomCenter,
-              child: GuardListsScreenBottomAppBar(
+              child: GuardListPreviewBottomAppBar(
                 isAppBarVisible: isAppBarVisible,
-                onAddPressed: widget.onSave, // Assuming this should trigger onSave
-                // Add any additional buttons or functionality you need
+                onSavePressed: () {
+                  widget.onSave();
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+
+                  },
+                onShufflePressed: widget.onSave, //TODO change
               ),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.save),
-        onPressed: widget.onSave,
-      ),
+      
     );
   }
 }

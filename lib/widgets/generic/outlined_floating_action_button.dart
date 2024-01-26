@@ -15,7 +15,7 @@ class OutlinedFloatingActionButton extends StatelessWidget {
 
     return FloatingActionButton(
       onPressed: onPressed,
-      child: Icon(icon, color: scheme.primary),
+      child: Icon(icon, color: scheme.primary, size: 25),
       foregroundColor: scheme.onPrimary,
       shape: RoundedRectangleBorder(
         side: BorderSide(color: scheme.primary, width: 2),

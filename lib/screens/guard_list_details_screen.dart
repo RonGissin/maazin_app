@@ -28,6 +28,7 @@ class _GuardListDetailScreenState extends State<GuardListDetailScreen>
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.guardList.name),
+        centerTitle: true,
       ),
       body: NotificationListener<UserScrollNotification>(
         onNotification: (notification) {

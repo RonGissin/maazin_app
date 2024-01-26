@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:maazin_app/models/guard_list_model.dart';
+import 'package:maazin_app/screens/guard_list_preview_screen.dart';
 import 'package:provider/provider.dart';
 import '../models/assigned_team_member_model.dart';
 import '../guard_list_generator.dart';
@@ -79,31 +80,58 @@ class _GuardListsScreenState extends State<GuardListsScreen>
       isFixedGuardTime ? guardTime : null,
     );
 
-    Provider.of<GuardListsProvider>(context, listen: false)
-        .addGuardList(GuardListModel(name: listName, guardGroups: generatedGroups));
-
-    if (generatedGroups.isEmpty) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Invalid Guarding Period"),
-            content: const Text("Please make sure you enter a guarding period that is long enough to assign a guard."),
-            actions: <Widget>[
-              TextButton(
-                child: const Text("OK"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    } else {
-      Navigator.pop(context);
-    }
+    if (generatedGroups.isNotEmpty) {
+    // Navigate to the preview screen with the generated list
+    Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => GuardListPreviewScreen(
+      guardList: GuardListModel(name: listName, guardGroups: generatedGroups),
+      onSave: () => _saveGuardList(listName, generatedGroups),
+      onRegenerate: () => _showGenerateListModalWithContext(context),
+    ),
+  ),
+);
+  } else {
+    _showInvalidPeriodDialog(context);
   }
+  
+  }
+void _showGenerateListModalWithContext(context) {
+  _showGenerateListModal(
+    context,
+    selectedStartTime,
+    selectedEndTime,
+    (DateTime time) => setState(() => selectedStartTime = time),
+    (DateTime time) => setState(() => selectedEndTime = time),
+  );
+}
+
+void _saveGuardList(String listName, List<List<AssignedTeamMemberModel>> guardGroups) {
+  Provider.of<GuardListsProvider>(context, listen: false)
+      .addGuardList(GuardListModel(name: listName, guardGroups: guardGroups));
+}
+  void _showInvalidPeriodDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Invalid Guarding Period"),
+          content: const Text("Please make sure you enter a guarding period that is long enough to assign a guard."),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  
 
   @override
   Widget build(BuildContext context) {

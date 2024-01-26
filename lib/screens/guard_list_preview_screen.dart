@@ -4,30 +4,30 @@ import '../models/guard_list_model.dart';
 import '../widgets/guard_list/guard_list.dart';
 import '../widgets/guard_list/guard_lists_screen_bottom_app_bar.dart';
 
-class GuardListDetailScreen extends StatefulWidget {
+class GuardListPreviewScreen extends StatefulWidget {
   final GuardListModel guardList;
+  final VoidCallback onSave;
+  final VoidCallback onRegenerate;
 
-  const GuardListDetailScreen({Key? key, required this.guardList}) : super(key: key);
+  GuardListPreviewScreen({
+    Key? key,
+    required this.guardList,
+    required this.onSave,
+    required this.onRegenerate,
+  }) : super(key: key);
 
   @override
-  _GuardListDetailScreenState createState() => _GuardListDetailScreenState();
+  _GuardListPreviewScreenState createState() => _GuardListPreviewScreenState();
 }
 
-class _GuardListDetailScreenState extends State<GuardListDetailScreen>
-    with AutomaticKeepAliveClientMixin {
+class _GuardListPreviewScreenState extends State<GuardListPreviewScreen> {
   bool isAppBarVisible = true;
-  DateTime selectedStartTime = DateTime.now();
-  DateTime selectedEndTime = DateTime.now();
-
-  @override
-  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.guardList.name),
+        title: Text('Preview: ${widget.guardList.name}'),
       ),
       body: NotificationListener<UserScrollNotification>(
         onNotification: (notification) {
@@ -47,17 +47,17 @@ class _GuardListDetailScreenState extends State<GuardListDetailScreen>
               alignment: Alignment.bottomCenter,
               child: GuardListsScreenBottomAppBar(
                 isAppBarVisible: isAppBarVisible,
-                onAddPressed: () {
-                  // Implement the functionality for the add button here
-                  // Example: _showGenerateListModal(...);
-                },
+                onAddPressed: widget.onSave, // Assuming this should trigger onSave
+                // Add any additional buttons or functionality you need
               ),
             ),
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.save),
+        onPressed: widget.onSave,
+      ),
     );
   }
-
-  // Implement _showGenerateListModal or other relevant methods as needed
 }

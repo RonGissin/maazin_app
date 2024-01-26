@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:maazin_app/providers/onboarding_status_provider.dart';
 import 'package:maazin_app/screens/introduction/template_introduction_page.dart';
 import 'package:maazin_app/screens/loading_screen.dart';
@@ -27,6 +28,14 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
         },
         children: <Widget>[
           // Add your onboarding content here
+          Center(child: TemplateIntroductionPage(
+            description: "Welcome to Maazin App !",
+            child: SvgPicture.asset(
+                    'assets/logo.svg', // Replace with the path to your SVG file
+                    width: 150,  // Set the desired width
+                    height: 150, // Set the desired height
+                    color: scheme.secondary,
+            ))),
           Center(child: const TemplateIntroductionPage(
             imagePath: 'assets/add_members_intro_page_screenshot.jpg',
             description: "First, add your team members",)),
@@ -54,7 +63,7 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: List.generate(4, (index) => _buildDot(index, context)),
+              children: List.generate(5, (index) => _buildDot(index, context)),
             ),
           ),
     );

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import '../models/guard_list_model.dart';
 import '../widgets/guard_list/guard_list.dart';
-import '../widgets/guard_list/guard_lists_screen_bottom_app_bar.dart';
+import '../widgets/guard_list/guard_list_details_bottom_app_bar.dart';
 
 class GuardListDetailScreen extends StatefulWidget {
   final GuardListModel guardList;
@@ -43,15 +43,16 @@ class _GuardListDetailScreenState extends State<GuardListDetailScreen>
         },
         child: Stack(
           children: [
-            GuardList(name: widget.guardList.name, guardGroups: widget.guardList.guardGroups),
+            GuardList(
+              keyPrefix: 'guard-list-details',
+              name: widget.guardList.name,
+              guardGroups: widget.guardList.guardGroups,
+              saveListOnReorder: true,),
             Align(
               alignment: Alignment.bottomCenter,
-              child: GuardListsScreenBottomAppBar(
+              child: GuardListDetailsBottomAppBar(
+                guardList: widget.guardList,
                 isAppBarVisible: isAppBarVisible,
-                onAddPressed: () {
-                  // Implement the functionality for the add button here
-                  // Example: _showGenerateListModal(...);
-                },
               ),
             ),
           ],
@@ -59,6 +60,4 @@ class _GuardListDetailScreenState extends State<GuardListDetailScreen>
       ),
     );
   }
-
-  // Implement _showGenerateListModal or other relevant methods as needed
 }

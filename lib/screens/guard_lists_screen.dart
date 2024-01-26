@@ -5,6 +5,7 @@ import 'package:maazin_app/screens/guard_list_preview_screen.dart';
 import 'package:provider/provider.dart';
 import '../models/assigned_team_member_model.dart';
 import '../guard_list_generator.dart';
+import '../models/generate_list_metadata.dart';
 import '../widgets/generic/dismissable_reorderable_list_view.dart';
 import '../widgets/guard_list/generate_list_modal.dart';
 import '../providers/team_provider.dart';
@@ -57,16 +58,9 @@ class _GuardListsScreenState extends State<GuardListsScreen>
     );
   }
 
-  void _generateList(
-    String listName,
-    DateTime startTime,
-    DateTime endTime,
-    int? guardTime,
-    int numberOfConcurrentGuards,
-    bool isFixedGuardTime,
-  ) {
+  void _generateList(GenerateListMetadata generateListMetadata) {
     setState(() {
-      isInvalidTime = startTime.isAfter(endTime);
+      isInvalidTime = generateListMetadata.startTime.isAfter(generateListMetadata.endTime);
     });
 
     if (isInvalidTime) {
@@ -75,45 +69,44 @@ class _GuardListsScreenState extends State<GuardListsScreen>
 
     List<List<AssignedTeamMemberModel>> generatedGroups = generator.generateGuardGroups(
       Provider.of<TeamProvider>(context, listen: false).teamMembers,
-      numberOfConcurrentGuards,
-      startTime,
-      endTime,
-      isFixedGuardTime ? guardTime : null,
+      generateListMetadata.numberOfConcurrentGuards,
+      generateListMetadata.startTime,
+      generateListMetadata.endTime,
+      generateListMetadata.isFixedGuardTime ? generateListMetadata.guardTime : null,
     );
 
     if (generatedGroups.isNotEmpty) {
-    // Navigate to the preview screen with the generated list
-    Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (context) => GuardListPreviewScreen(
-      guardList: GuardListModel(name: listName, guardGroups: generatedGroups),
-      onSave: () {
-        _saveGuardList(listName, generatedGroups);
-        setState(() {});
-      },
-      onRegenerate: () => _showGenerateListModalWithContext(context),
-    ),
-  ),
-);
+      // Navigate to the preview screen with the generated list
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => GuardListPreviewScreen(
+            guardList: GuardListModel(name: generateListMetadata.listName, guardGroups: generatedGroups, metadata: generateListMetadata),
+            onSave: () {
+              _saveGuardList(generateListMetadata.listName, generatedGroups, generateListMetadata);
+              setState(() {});
+            },
+            onShuffle: (guardList) => _shuffleList(guardList),
+            generateListMetadata: generateListMetadata,
+          ),
+        ),
+      );
   } else {
     _showInvalidPeriodDialog(context);
   }
   
   }
-void _showGenerateListModalWithContext(context) {
-  _showGenerateListModal(
-    context,
-    selectedStartTime,
-    selectedEndTime,
-    (DateTime time) => setState(() => selectedStartTime = time),
-    (DateTime time) => setState(() => selectedEndTime = time),
-  );
+void _shuffleList(GuardListModel guardList) {
+  Navigator.pop(context);
+  _generateList(guardList.metadata);
 }
 
-void _saveGuardList(String listName, List<List<AssignedTeamMemberModel>> guardGroups) {
+void _saveGuardList(
+  String listName,
+  List<List<AssignedTeamMemberModel>> guardGroups,
+  GenerateListMetadata metadata) {
     Provider.of<GuardListsProvider>(context, listen: false)
-      .addGuardList(GuardListModel(name: listName, guardGroups: guardGroups));
+      .addGuardList(GuardListModel(name: listName, guardGroups: guardGroups, metadata: metadata));
 }
   void _showInvalidPeriodDialog(BuildContext context) {
     showDialog(

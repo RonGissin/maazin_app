@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:maazin_app/utils/date_formatter.dart';
+import '../../models/generate_list_metadata.dart';
 import '../datetime_picker.dart';
 import 'number_of_guards_input.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,7 +9,7 @@ import 'package:flutter/cupertino.dart';
 class GenerateListModal extends StatefulWidget {
   final DateTime previousStartTime;
   final DateTime previousEndTime;
-  final Function(String, DateTime, DateTime, int?, int, bool) onGenerateList;
+  final Function(GenerateListMetadata) onGenerateList;
   final void Function(DateTime) onSetStartTime;
   final void Function(DateTime) onSetEndTime;
 
@@ -198,14 +200,17 @@ class _GenerateListModalState extends State<GenerateListModal> {
                   }
 
                   var listName = listNameController.text.trim();
+                  listName= listName.isEmpty ? 
+                  "Created: ${DateFormatter.formatDate(DateTime.now())} - ${DateFormatter.formatTimeWithSeconds(DateTime.now())}" 
+                  : listName;
 
                   widget.onGenerateList(
-                    listName,
+                    GenerateListMetadata (listName,
                     selectedStartTime,
                     selectedEndTime,
                     isFixedGuardTime ? intGuardTime : null,
                     numberOfConcurrentGuards,
-                    isFixedGuardTime,
+                    isFixedGuardTime)
                   );
                 },
                 child: const Text('Generate'),

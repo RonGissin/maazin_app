@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:maazin_app/widgets/guard_list/guard_list_preview_bottom_app_bar.dart';
+import '../models/generate_list_metadata.dart';
 import '../models/guard_list_model.dart';
 import '../widgets/guard_list/guard_list.dart';
 
 class GuardListPreviewScreen extends StatefulWidget {
   final GuardListModel guardList;
   final VoidCallback onSave;
-  final VoidCallback onRegenerate;
+  final void Function(GuardListModel) onShuffle;
+  final GenerateListMetadata generateListMetadata;
 
   GuardListPreviewScreen({
     Key? key,
     required this.guardList,
     required this.onSave,
-    required this.onRegenerate,
+    required this.onShuffle,
+    required this.generateListMetadata
   }) : super(key: key);
 
   @override
@@ -43,10 +46,15 @@ class _GuardListPreviewScreenState extends State<GuardListPreviewScreen> {
         },
         child: Stack(
           children: [
-            GuardList(name: widget.guardList.name, guardGroups: widget.guardList.guardGroups),
+            GuardList(
+              keyPrefix: 'guard-list-preview',
+              name: widget.guardList.name,
+              guardGroups: widget.guardList.guardGroups,
+              saveListOnReorder: false),
             Align(
               alignment: Alignment.bottomCenter,
               child: GuardListPreviewBottomAppBar(
+                guardList: widget.guardList,
                 isAppBarVisible: isAppBarVisible,
                 onSavePressed: () {
                   widget.onSave();
@@ -54,7 +62,10 @@ class _GuardListPreviewScreenState extends State<GuardListPreviewScreen> {
                   Navigator.pop(context);
 
                   },
-                onShufflePressed: widget.onSave, //TODO change
+                onShufflePressed: (guardList) {
+                  widget.onShuffle(guardList);
+                  setState(() {});
+                }, 
               ),
             ),
           ],

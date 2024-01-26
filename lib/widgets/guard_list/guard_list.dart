@@ -7,8 +7,12 @@ import 'guard_group_tile.dart';
 class GuardList extends StatefulWidget {
   List<List<AssignedTeamMemberModel>> guardGroups = [];
   String name;
+  bool saveListOnReorder;
+  String keyPrefix;
 
-  GuardList({Key? key, required this.name, required this.guardGroups}) : super(key: key);
+  GuardList({required this.keyPrefix, required this.name, required this.guardGroups, required this.saveListOnReorder}) 
+    : super(key: Key('${keyPrefix}-${name}'))
+  {}
 
   @override
   _GuardListState createState() => _GuardListState();
@@ -52,8 +56,10 @@ class _GuardListState extends State<GuardList> {
                     }
                   }
 
-                  Provider.of<GuardListsProvider>(context, listen: false)
+                  if (widget.saveListOnReorder) {
+                    Provider.of<GuardListsProvider>(context, listen: false)
                       .updateGuardList(widget.name, widget.guardGroups);
+                  }
                 });
               },
             ),

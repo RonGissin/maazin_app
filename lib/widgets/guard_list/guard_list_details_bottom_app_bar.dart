@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:maazin_app/models/guard_list_model.dart';
-import '../../models/generate_list_metadata.dart';
+import 'package:share/share.dart';
+import '../../utils/snack_bar_util.dart';
+import '../../utils/whatsapp_guard_list_formatter.dart';
 import '../generic/outlined_floating_action_button.dart';
 
-class GuardListPreviewBottomAppBar extends StatelessWidget {
+class GuardListDetailsBottomAppBar extends StatelessWidget {
   final bool isAppBarVisible;
-  final VoidCallback onSavePressed;
-  final Function(GuardListModel) onShufflePressed;
   final GuardListModel guardList;
 
-  const GuardListPreviewBottomAppBar({
+  const GuardListDetailsBottomAppBar({
     Key? key,
     required this.isAppBarVisible,
-    required this.onSavePressed,
-    required this.onShufflePressed,
     required this.guardList,
   }) : super(key: key);
 
@@ -31,7 +30,7 @@ class GuardListPreviewBottomAppBar extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: _buildFabWidgets(context),
+              children: _buildFabWidgets(context, guardList),
             ),
           ),
         ),
@@ -39,17 +38,23 @@ class GuardListPreviewBottomAppBar extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildFabWidgets(BuildContext context) {
+  List<Widget> _buildFabWidgets(BuildContext context, GuardListModel guardList) {
     return [
           OutlinedFloatingActionButton(
-            onPressed: onSavePressed,
-            icon: Icons.save,
+            onPressed: () {
+              Clipboard.setData(ClipboardData(text: WhatsappGuardListFormatter.ListToString(guardList.guardGroups)));
+              SnackbarUtil.showSnackBar(context, 'List Copied!');
+            },
+            icon: Icons.copy,
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           OutlinedFloatingActionButton(
-            onPressed: () => onShufflePressed(guardList),
-            icon: Icons.change_circle_rounded,
-          )
+            onPressed: () {
+              final String readableList = WhatsappGuardListFormatter.ListToString(guardList.guardGroups);
+              Share.share(readableList);
+            },
+            icon: Icons.share_sharp,
+          ),
       ];
   }
 }

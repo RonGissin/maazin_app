@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:maazin_app/models/generate_list_metadata.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/assigned_team_member_model.dart';
 import '../models/guard_list_model.dart';
@@ -19,9 +20,19 @@ class GuardListsProvider extends ChangeNotifier {
     if (savedGuardListsJson != null) {
       List<dynamic> savedGuardListsDynamic = json.decode(savedGuardListsJson);
       List<Map<String, dynamic>> savedGuardLists = List<Map<String, dynamic>>.from(savedGuardListsDynamic);
-      
+
       _guardLists = savedGuardLists.map((list) {
         String name = list['name'] as String;
+        Map<String, dynamic> metadataJson = list['metadata'] as Map<String, dynamic>;
+        GenerateListMetadata metadata = GenerateListMetadata(
+          metadataJson['listName'] as String,
+          DateTime.parse(metadataJson['startTime'] as String),
+          DateTime.parse(metadataJson['endTime'] as String),
+          metadataJson['guardTime'] as int?,
+          metadataJson['numberOfConcurrentGuards'] as int,
+          metadataJson['isFixedGuardTime'] as bool,
+        );
+
         List<dynamic> guardGroupsDynamic = list['guardGroups'] as List;
         List<List<AssignedTeamMemberModel>> guardGroups = guardGroupsDynamic.map((groupDynamic) {
           List<Map<String, dynamic>> group = List<Map<String, dynamic>>.from(groupDynamic);
@@ -34,9 +45,9 @@ class GuardListsProvider extends ChangeNotifier {
             );
           }).toList();
         }).toList();
-        return GuardListModel(name: name, guardGroups: guardGroups); // Ensure GuardList is a valid constructor
+        return GuardListModel(name: name, guardGroups: guardGroups, metadata: metadata);
       }).toList();
-      
+
       notifyListeners();
     }
   }
@@ -56,9 +67,17 @@ class GuardListsProvider extends ChangeNotifier {
 
   void saveGuardLists() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<Map<String, dynamic>> guardListsMap = guardLists.map((listInfo) {
+    List<Map<String, dynamic>> guardListsMap = _guardLists.map((listInfo) {
       return {
         'name': listInfo.name,
+        'metadata': {
+          'listName': listInfo.metadata.listName,
+          'startTime': listInfo.metadata.startTime.toIso8601String(),
+          'endTime': listInfo.metadata.endTime.toIso8601String(),
+          'guardTime': listInfo.metadata.guardTime,
+          'numberOfConcurrentGuards': listInfo.metadata.numberOfConcurrentGuards,
+          'isFixedGuardTime': listInfo.metadata.isFixedGuardTime,
+        },
         'guardGroups': listInfo.guardGroups.map((group) {
           return group.map((member) {
             return {

@@ -14,7 +14,7 @@ class WhatsappGuardListFormatter {
           formattedList.write(', ');
         }
       }
-      formattedList.write(' - ${DateFormatter.formatTime(guardGroups[i][0].startTime)} to ${DateFormatter.formatTime(guardGroups[i][0].endTime)}\n');
+      formattedList.write(' - ${DateFormatter.formatTime(guardGroups[i][0].startTime)} - ${DateFormatter.formatTime(guardGroups[i][0].endTime)}\n');
     }
 
     return formattedList.toString();

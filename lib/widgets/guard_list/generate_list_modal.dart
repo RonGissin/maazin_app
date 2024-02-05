@@ -128,7 +128,8 @@ class _GenerateListModalState extends State<GenerateListModal> {
                       isFixedGuardTime = value;
                     });
                   },
-              )),
+                ),
+              ),
               Text('Fixed Guard Time'),
               IconButton(
                 icon: Icon(Icons.info),
@@ -140,37 +141,55 @@ class _GenerateListModalState extends State<GenerateListModal> {
           ),
           Visibility(
             visible: isFixedGuardTime,
-            child: Center(
-              child: Container(
-                height: 100.0, 
-                width: 250.0, // Fixed width for the picker
-                child: CupertinoPicker(
-                  selectionOverlay: CupertinoPickerDefaultSelectionOverlay(background: scheme.primary.withOpacity(0.5)),
-                  magnification: 1.2,
-                  diameterRatio: 1.1,
-                  itemExtent: 32.0, // Height of each item
-                  onSelectedItemChanged: (int value) {
-                    setState(() {
-                      intGuardTime = value;
-                    });
-                  },
-                  children: List<Widget>.generate(200, (int index) {
-                    return Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          index.toString(),
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        Text(
-                          ' min',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    );
-                  }),
+            child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10),
+                    CupertinoPicker(
+                      selectionOverlay: CupertinoPickerDefaultSelectionOverlay(background: scheme.primary.withOpacity(0.5)),
+                      magnification: 1.2,
+                      diameterRatio: 1.1,
+                      itemExtent: 32.0, // Height of each item
+                      scrollController: FixedExtentScrollController(initialItem: (intGuardTime ?? 0) % 60),
+                      onSelectedItemChanged: (int value) {
+                        setState(() {
+                          intGuardTime = ((intGuardTime ?? 0) ~/ 60) * 60 + value; // Calculate total minutes
+                        });
+                      },
+                      children: List.generate(60, (index) => _buildPickerItem(index,true))
+                      
+                       // Endless loop for minutes
+                    ),
+                  ],
                 ),
               ),
+                SizedBox(width: 20),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 10),
+                      CupertinoPicker(
+                        selectionOverlay: CupertinoPickerDefaultSelectionOverlay(background: scheme.primary.withOpacity(0.5)),
+                        magnification: 1.2,
+                        diameterRatio: 1.1,
+                        itemExtent: 32.0, // Height of each item
+                        scrollController: FixedExtentScrollController(initialItem: (intGuardTime ?? 0) ~/ 60),
+
+                        onSelectedItemChanged: (int value) {
+                          setState(() {
+                            intGuardTime = (value * 60) + (intGuardTime ?? 0) % 60; // Calculate total minutes
+                          });
+                        },
+                        children: List.generate(13, (index) => _buildPickerItem(index,false)),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
           Padding(
@@ -207,4 +226,22 @@ class _GenerateListModalState extends State<GenerateListModal> {
       ),
     );
   }
+
+  Widget _buildPickerItem(int value,bool isMinute) {
+              return Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          value.toString(),
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        Text(
+                         isMinute? ' minites' : ' hours',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    );
+    
+  }
 }
+

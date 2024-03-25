@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:maazin_app/providers/guard_groups_provider.dart';
 import 'package:maazin_app/screens/loading_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'providers/team_provider.dart';
 import 'providers/onboarding_status_provider.dart';
 import 'screens/introduction/introduction_screen.dart';
